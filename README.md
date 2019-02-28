@@ -3,11 +3,23 @@ LEGO Element Image Based Sorting Smart Assistant
 
 # Purpose
 
+## Tag
+
+* Recognize an individual LEGO element and determining it's part number and color, cross reference the category and return a json object with this meta data
+
 ## Separate
+
+### Three Pass System
 
 * Category
 * Part Number
 * Color
+
+# GUI Interface
+
+* Learning for adding parts
+* Mode for Separate (Category, Part Number, Color)
+* Advanced Mode for Set Detection
 
 # Reference Links
 
