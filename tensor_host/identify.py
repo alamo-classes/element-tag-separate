@@ -5,17 +5,23 @@ from urllib import request
 from PIL import Image
 
 
-class Training:
-    def __init__(self, ras1_ip):
+class CaptureTrainingImages:
+    def __init__(self, ras1_ip, label):
         self.rasp1_ip = ras1_ip
+        self.train_data = "{}/train/".format(os.getcwd())
+        self.label = label
+        self.iteration = 1
+        os.makedirs(self.train_data, exist_ok=True)
 
     def get_snapshot(self):
         file = io.BytesIO(request.urlopen("{}/snapshot".format(self.rasp1_ip)).read())
         img = Image.open(file)
-        img.save('test.jpg')
 
-    def train(self):
-        pass
+        # Get the next iteration number for the file name
+        while os.path.exists("{}/{}_{}".format(self.train_data, self.label, self.iteration)):
+            self.iteration += 1
+
+        img.save('{}/{}_{}.jpg'.format(self.train_data, self.label, self.iteration))
 
 
 class Identify:
@@ -39,11 +45,11 @@ if __name__ == "__main__":
               )
         exit(0)
     # If not already created, generate an artifacts directory
-    os.makedirs(path="{}/artifacts".format(os.chdir), exist_ok=True)
+    os.makedirs("{}/artifacts".format(os.chdir), exist_ok=True)
     # Set the Raspberry Pi IP
     # TODO: Put this in a configuration file
     rasp1_ip = "http://192.168.0.117:5000"
     # Run routine based on the cli argument
     if sys.argv[1] == "training":
-        trainer = Training(rasp1_ip)
+        trainer = CaptureTrainingImages(rasp1_ip)
         trainer.get_snapshot()
