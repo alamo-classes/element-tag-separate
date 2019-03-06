@@ -105,3 +105,4 @@ venv.bak/
 
 # Pycharm
 .idea/
+tensor_host/config.ini

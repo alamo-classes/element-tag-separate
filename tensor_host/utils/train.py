@@ -2,7 +2,7 @@
 
 
 class TransferLearnTraining:
-    def __init__(self):
+    def __init__(self, arg_flags, config_args):
         pass
 
     def categorize_data(self):
