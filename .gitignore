@@ -102,3 +102,7 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# Pycharm
+.idea/
+tensor_host/config.ini
