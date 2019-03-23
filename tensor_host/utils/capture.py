@@ -16,6 +16,9 @@ class CaptureLabeledImages:
         os.makedirs(self.train_data, exist_ok=True)
 
     def get_snapshot(self):
+        """
+        Retrieve a snapshot from the Raspberry Pi camera. Then save the file and label.
+        """
         # Get the next create the next iteration of the training data
         exit_command = None
         snaps_taken = 0
@@ -37,6 +40,6 @@ class CaptureLabeledImages:
             # Write the image file as a JPEG
             img.save("{}/{}_{}".format(self.train_data, self.label, capture_number))
             # Write the new column to the CSV
-            # TODO: Put the CSV writer here
+            # TODO: Put the CSV writer here. Need to figure out how the labels are taken first
 
         print("Successfully processed {} images for {} label".format(snaps_taken, self.label))

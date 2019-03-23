@@ -14,6 +14,8 @@ import argparse
 import configparser
 import os
 
+from tensor_host.utils.process import organize_dataset
+
 
 def parse_config(config_dir):
     configuration = configparser.ConfigParser()
@@ -94,13 +96,22 @@ if __name__ == "__main__":
     # Run capture routine
     if FLAGS.mode == "capture":
         config = parse_config(FLAGS.config_pwd)
+        print("Configuration loaded...")
+        print("Beginning Capture Process...")
 
-        print(config["Artifacts"]["artifact_dir"])
+    if FLAGS.mode == "process":
+        config = parse_config(FLAGS.config_pwd)
+        print("Configuration loaded...")
+        print("Beginning Data Processing...")
+        organize_dataset(config)
 
     # Run training routine
     if FLAGS.mode == "training":
         config = parse_config(FLAGS.config_pwd)
+        print("Configuration loaded...")
+        print("Beginning Training Image Classifier")
 
     # Run identification routine
     if FLAGS.mode == "identify":
         config = parse_config(FLAGS.config_pwd)
+        print("Configuration loaded...")
