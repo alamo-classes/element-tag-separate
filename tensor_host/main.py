@@ -14,6 +14,7 @@ import argparse
 import configparser
 import os
 
+from tensor_host.utils.capture import CaptureLabeledImages
 from tensor_host.utils.process import organize_dataset
 
 
@@ -39,7 +40,7 @@ def setup_config(config_dir):
         os.getcwd()))
     if not artifact_dir:
         artifact_dir = os.getcwd()
-
+    artifact_dir = os.path.join(artifact_dir, 'artifacts/')
     # Construct the parser for the user arguments
     configuration = configparser.ConfigParser()
 
@@ -53,7 +54,7 @@ def setup_config(config_dir):
     pi_ip = dict()
     for pi_num in range(number_of_cams):
         pi_ip[pi_num] = input("Please enter the IP address for Raspberry Pi #{}: ".format(pi_num))
-        configuration['Raspbery_IP'][pi_num] = pi_ip
+        configuration['Raspberry_IP'][pi_num] = pi_ip
 
     # Write the configuation file
     with open('{}/config.ini'.format(config_dir), 'w') as configfile:
@@ -98,6 +99,8 @@ if __name__ == "__main__":
         config = parse_config(FLAGS.config_pwd)
         print("Configuration loaded...")
         print("Beginning Capture Process...")
+        capture_img = CaptureLabeledImages(arg_flags=FLAGS, config_args=config)
+        capture_img.get_snapshot()
 
     if FLAGS.mode == "process":
         config = parse_config(FLAGS.config_pwd)
