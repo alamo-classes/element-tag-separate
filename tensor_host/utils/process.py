@@ -23,9 +23,9 @@ def organize_dataset(config_args):
         folder_name = df.loc[df['id'] == file.split('.')[0], 'part_num'].values[0]
 
         # Sort the images in the csv to the corresponding directory
-        os.makedirs(os.path.join(dataset_path, folder_name), exist_ok=True)
+        os.makedirs(os.path.join(dataset_path, str(folder_name)), exist_ok=True)
         source = os.path.join(train_data, file)
-        destination = os.path.join(dataset_path, folder_name, file)
+        destination = os.path.join(dataset_path, str(folder_name), file)
         shutil.copy(source, destination)
 
     print("Successfully sorted the training data by part number and copied images into respective folders")

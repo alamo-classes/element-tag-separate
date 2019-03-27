@@ -36,6 +36,7 @@ class CaptureLabeledImages:
             exit_command = input("To take another snapshot press Enter.\n To change label enter \"c\".\n"
                                  "To quit enter \"q\": ")
             if exit_command in ['q', 'Q']:
+                print("Successfully logged {} images!".format(snaps_taken))
                 exit(0)
             snaps_taken += 1
             # Check if there is a file with the current name, if so iterate...
@@ -50,4 +51,3 @@ class CaptureLabeledImages:
             # Append the dataframe to the csv file. If the file does not exist then write the headers as well.
             with open(self.df_path, 'a') as csv_file:
                 df.to_csv(csv_file, header=(csv_file.tell() == 0), index=False)
-        print("Successfully processed {} images for {} label".format(snaps_taken, self.label))
