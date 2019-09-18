@@ -29,6 +29,12 @@
  */
 
 #include <Servo.h>
+#ifdef __AVR__
+ #include <avr/power.h>
+#endif
+
+// Initialize the LED
+Adafruit_NeoPixel strip(16, 9, NEO_GRB + NEO_KHZ800
 
 // Initialize the four different servos
 Servo camera_servo feeder_servo hopper_servo sorter_servo;
@@ -40,6 +46,20 @@ int sorter_servo_pos = 0;
 
 void setup() {
     Serial.begin(9600);
+
+    // Initialize the LED lights
+#if defined(__AVR_ATtiny85__) && (F_CPU == 16000000)
+    clock_prescale_set(clock_div_1);
+#endif
+    strip.begin();
+    strip.show();
+    strip.setBrightness(50)
+    for (int i=0; i<strip.numPixels(); i++) {
+        // Set all pixels to white
+        strip.setPixelColor(i, strip.Color(127, 127, 127));
+    }
+    strip.show();
+
 
     // Initialize the servos and attach them to their corresponding pins
     camera_servo.attach(5);
@@ -61,19 +81,19 @@ void loop() {
                 Serial.print("Camera Encoder - Stopped");
                 break;
             case "b": // Stop Feeder Servo
-                feeder_servo.write();
+                feeder_servo.write(91);
                 Serial.print("Feeder Encoder - Stopped");
                 break;
             case "c": // Stop Hopper Servo
-                hopper_servo.write();
+                // hopper_servo.write();
                 Serial.print("Hopper Encoder - Stopped");
                 break;
             case "d": // Stop Sorter Servo
-                sorter_servo.write();
+                // sorter_servo.write();
                 Serial.print("Sorter Encoder - Stopped");
                 break;
             case "e": // Run Camera Servo
-                camera_servo.write();
+                camera_servo.write(100);
                 Serial.print("Camera Encoder - Running");
                 break;
             case "f": // Run Camera Servo (Reverse)

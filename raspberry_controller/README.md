@@ -24,10 +24,11 @@ arduino-cli core install arduino:avr
 Download any needed libraries
 ``` 
 arduino-cli lib install "Servo"
+arduino-cli lib install "Adafruit NeoPixel"
 ```
 
 Compile the sketch and upload
 ``` 
-arduino-cli compile --fqbn arduino:avr:mega Arduino/test_servo
-arduino-cli upload -p /dev/ttyACM0 --fqbn arduino:avr:mega Arduino/test_servo
+arduino-cli compile --fqbn arduino:avr:mega $HOME/Arduino/test_servo
+arduino-cli upload -p /dev/ttyACM0 --fqbn arduino:avr:mega $HOME/Arduino/test_servo
 ```

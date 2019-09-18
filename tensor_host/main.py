@@ -14,8 +14,8 @@ import argparse
 import configparser
 import os
 
-from tensor_host.utils.capture import CaptureLabeledImages
-from tensor_host.utils.process import organize_dataset
+from tensor_host.training.capture import CaptureLabeledImages
+from tensor_host.training.process import organize_dataset
 
 
 def parse_config(config_dir):

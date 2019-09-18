@@ -1,4 +1,7 @@
-""" Iterate through the training dataset to create dataset folders by Lego Element """
+"""
+Iterate through the training dataset to create dataset folders by Lego Element
+Used to sort captured photographs
+"""
 import os
 import shutil
 import pandas as pd
