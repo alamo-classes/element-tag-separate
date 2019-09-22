@@ -25,7 +25,8 @@ Element Sorter - Monitor
 <div class="ui inverted  segment">
     <div class="ui warning message">To start sorting, select a profile and click run.</div>
     <div class="ui top attached segment">
-        <iframe style="height: 600px; width: 890px"></iframe>
+{#        <iframe src="http://192.168.0.11:5000/snapshot" style="height: 600px; width: 1120px"></iframe>#}
+        <div class="ui embed" data-url="http://192.168.0.11:5000/snapshot" data-placeholder="http://cdn.lowgif.com/full/41de05d691978378-index-of-images-preloaders.gif" data-icon="warning icon" style="pointer-events: none"></div>
     </div>
     <div class="ui bottom attached inverted segment">
         <form class="ui inverted form">
@@ -34,7 +35,7 @@ Element Sorter - Monitor
                 <select id="profile_dropdown" class="ui fluid dropdown"></select>
             </div>
             <div class="ui two buttons">
-                <button class="ui three wide fluid green button" type="button">Run</button>
+                <button class="ui three wide fluid green button" type="button" onclick="$('.warning').css('pointer-events', 'auto').click()">Run</button>
                 <button class="ui three wide fluid red button" type="button">Stop</button>
             </div>
         </form>
@@ -46,6 +47,8 @@ Element Sorter - Monitor
     <script>
         $(document).ready(function(){
             $("#monitor_item").addClass("active")
-        })
+        });
+        $('.ui.embed').embed({autoplay: true});
+        $('.warning').css('display', 'none');
     </script>
 {% endblock %}

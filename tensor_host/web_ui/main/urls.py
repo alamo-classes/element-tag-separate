@@ -21,5 +21,6 @@ urlpatterns = [
     path('', include('monitor.urls')),
     path('training', include('training.urls')),
     path('catalog', include('catalog.urls')),
-    path('profiles', include('profiles.urls'))
+    path('profiles', include('profiles.urls')),
+    path('blocks', include('blocks.urls'))
 ]
