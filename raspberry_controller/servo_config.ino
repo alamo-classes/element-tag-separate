@@ -22,6 +22,7 @@
  *      -j --- Change LED Lights to white
  *      -k --- Change LED Lights to red
  *      -l --- Change LED Lights to color pattern change
+ *      -m --- Begin IR sensor loop
  *
  *  TODO: If try-catch alternative is needed then check out --> http://www.on-time.com/ddj0011.htm
  *  TODO: May need a failsafe if the serial connection is broken
@@ -76,6 +77,9 @@ float dutyCycle;
 float maxUnitsForCircle;
 int outputSpeed;
 
+// IR Detector Sensor
+int sensorState = 0;
+
 void setup() {
     // Start serial connection
     Serial.begin(9600);
@@ -104,6 +108,8 @@ void setup() {
 
     sorter_servo.attach(SERVO_PIN);
     pinMode(SERVO_FEEDBACK_PIN, INPUT);
+
+    pinMode(4, HIGH)
 }
 
 void loop() {
@@ -181,6 +187,17 @@ void loop() {
                 // TODO: Write this
                 Serial.print("LED - Pattern");
                 break;
+            case 'm':
+                while (Serial.available()  < 1){
+                    sensorState = digitalRead(4);
+                    if (sensorState) {
+                        Serial.print("sensorState is high")
+//                         delay(500)
+//                         Check it again
+                    } else {
+                        Serial.print("sensorState is low")
+                    }
+                }
             default: // Replay that the byte was invalid
                 Serial.print("Invalid byte detected...");
                 break;

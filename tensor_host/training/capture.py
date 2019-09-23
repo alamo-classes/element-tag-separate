@@ -22,7 +22,7 @@ class CaptureLabeledImages:
         """
         Retrieve a snapshot from the Raspberry Pi camera. Then save the file and label.
         """
-        # Get the next create the next iteration of the training data
+        # Get the next create the next iteration of the training_old data
         exit_command = None
         snaps_taken = 0
         capture_number = 0

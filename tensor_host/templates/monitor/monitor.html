@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Element Sorter - Monitor
+{% endblock %}
+
+{% block sidebar %}
+  <div class="five wide stretched column">
+
+    <div class="ui inverted segment" style="margin-left: 2rem">
+      <div class="ui segment">
+        <h3 class="ui header">
+          Logger
+          <button class="ui inline right teal button" style="margin-left: 60%">Reset Logger</button>
+        </h3>
+      </div>
+      <div class="ui segment" style="height: 760px">
+        test<br>
+        test
+        test
+        test
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block body %}
+  <div class="ten wide stretched column">
+
+    <div class="ui inverted  segment">
+      <div class="ui warning message">To start sorting, select a profile and click run.</div>
+      <div class="ui top attached segment">
+        {#        <iframe src="http://192.168.0.11:5000/snapshot" style="height: 600px; width: 1120px"></iframe>#}
+        <div class="ui embed" data-url="http://192.168.0.11:5000/snapshot"
+             data-placeholder="http://cdn.lowgif.com/full/41de05d691978378-index-of-images-preloaders.gif"
+             data-icon="warning icon" style="pointer-events: none"></div>
+      </div>
+      <div class="ui bottom attached inverted segment">
+        <form class="ui inverted form">
+          <div class="field">
+            <label for="profile_dropdown">Profile</label>
+            <select id="profile_dropdown" class="ui fluid dropdown"></select>
+          </div>
+          <div class="ui two buttons">
+            <button class="ui three wide fluid green button" type="button"
+                    onclick="$('.warning').css('pointer-events', 'auto').click()">Run
+            </button>
+            <button class="ui three wide fluid red button" type="button">Stop</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block additional_js %}
+  <script>
+      $(document).ready(function () {
+          $("#monitor_item").addClass("active")
+      });
+      $('.ui.embed').embed({autoplay: true});
+      $('.warning').css('display', 'none');
+  </script>
+{% endblock %}

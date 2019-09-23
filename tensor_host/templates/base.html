@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %} Element Sorter {% endblock %}</title>
+</head>
+
+{% block css %}
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+{% endblock %}
+
+{% block additional_css %}
+{% endblock %}
+
+<body>
+<div class="ui two column grid">
+  <div class="ui fluid row">
+    <div class="ui inverted fluid menu">
+      <h2 class="header" style="color: white; margin-left: 2rem">
+        Element Sorter
+        <i class="python icon"></i>
+      </h2>
+      <div class="ui inverted right menu" style="margin-right: 2rem">
+        <a id="monitor_item" class="item" href="/">Monitor</a>
+        <a id="training_item" class="item" href="training">Training</a>
+        <a id="catalog_item" class="item" href="catalog">Catalog</a>
+        <a id="blocks_item" class="item" href="blocks">Blocks</a>
+        <a id="profile_item" class="item" href="profile">Profiles</a>
+      </div>
+    </div>
+  </div>
+  <div class="ui fluid row">
+    {% block full_content %}
+      {% block sidebar %}
+      {% endblock %}
+      {% block body %}
+        Test body segment
+      {% endblock %}
+    {% endblock %}
+  </div>
+</div>
+</body>
+
+{% block js %}
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+          integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+{% endblock %}
+
+{% block additional_js %}
+{% endblock %}
+</html>

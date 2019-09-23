@@ -1,5 +1,5 @@
 """
-Iterate through the training dataset to create dataset folders by Lego Element
+Iterate through the training_old dataset to create dataset folders by Lego Element
 Used to sort captured photographs
 """
 import os
@@ -31,4 +31,4 @@ def organize_dataset(config_args):
         destination = os.path.join(dataset_path, str(folder_name), file)
         shutil.copy(source, destination)
 
-    print("Successfully sorted the training data by part number and copied images into respective folders")
+    print("Successfully sorted the training_old data by part number and copied images into respective folders")

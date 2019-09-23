@@ -5,10 +5,10 @@ Arguments:
 -- mode: Choose from one of the following modes:
     1. Setup - Used to write a new configuation file for the LEGO element sorter
     2. Capture - Capture new pictures for a dedicated label. Save pictures and append to the CSV file
-    3. Training - Using the label CSV and the training images produce a new neural network through transfer learning
+    3. Training - Using the label CSV and the training_old images produce a new neural network through transfer learning
     4. Identify - Using the trained neural network, identify the targeted LEGO element
 -- config_pwd: Directory which the configuration file is located
--- label: Label to be set when capturing training data
+-- label: Label to be set when capturing training_old data
 """
 import argparse
 import configparser
@@ -108,8 +108,8 @@ if __name__ == "__main__":
         print("Beginning Data Processing...")
         organize_dataset(config)
 
-    # Run training routine
-    if FLAGS.mode == "training":
+    # Run training_old routine
+    if FLAGS.mode == "training_old":
         config = parse_config(FLAGS.config_pwd)
         print("Configuration loaded...")
         print("Beginning Training Image Classifier")

@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Element Sorter - Blocks
+{% endblock %}
+
+{% block additional_css %}
+  <style>
+    .centering {
+      position: relative;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  </style>
+{% endblock %}
+
+{% block full_content %}
+  <div class="ui three wide column"></div>
+  <div class="ui ten wide column">
+    <div class="ui horizontal divider" style="font-size: large">Create/Edit Block Form</div>
+    <form class="ui form" method="post" action="{{ action }}">
+      {% csrf_token %}
+      <div class="ui field">
+        <label for="id_part_number">Part number:</label>
+        <input type="number" name="part_number" required="" id="id_part_number" placeholder="0123456" value="{{ part.part_number }}">
+      </div>
+      <div class="ui field">
+        <label for="id_description">Description:</label>
+        <input type="text" name="description" maxlength="128" id="id_description" placeholder="Describe the piece so it is identifiable" value="{{ part.description }}">
+      </div>
+      <div class="ui field">
+        <label for="id_category">Category:</label>
+        <input type="text" name="category" maxlength="128" id="id_category" placeholder="Bricks with slope" value="{{ part.category }}">
+      </div>
+      <div class="ui field">
+        <label for="id_color_wording">Color Description:</label>
+        <select name="color_wording" required="" id="id_color_wording" class="ui search dropdown">
+          <option value="{{ part.color_wording }}">{{ part.color_wording|default_if_none:"Select Color" }}</option>
+          <option value="White">White</option>
+          <option value="Grey">Grey</option>
+          <option value="Brick Yellow">Yellow, Brick</option>
+          <option value="Nougat">Nougat</option>
+          <option value="Bright Red">Red, Bright</option>
+          <option value="Bright Blue">Blue, Bright</option>
+          <option value="Bright Yellow">Yellow, Bright</option>
+          <option value="Black">Black</option>
+          <option value="Dark Green">Green, Dark</option>
+          <option value="Medium Green">Green, Medium</option>
+          <option value="Bright Green">Green, Bright</option>
+          <option value="Dark Orange">Orange, Dark</option>
+          <option value="Transparent">Transparent</option>
+          <option value="Transparent Red">Red, Transparent</option>
+          <option value="Transparent Light Blue">Blue, Transparent, Light</option>
+          <option value="Transparent Blue">Blue, Transparent</option>
+          <option value="Transparent Yellow">Yellow, Transparent</option>
+          <option value="Light Blue">Blue, Light</option>
+          <option value="Transparent Florescent Green">Green, Transparent, Florescent</option>
+          <option value="Medium Blue">Blue, Medium</option>
+          <option value="Bright Orange">Orange, Bright</option>
+          <option value="Bright Blue-Green">Blue-Green, Bright</option>
+          <option value="Transparent Brown">Brown, Transparent</option>
+          <option value="Transparent Mid Red Violet">Red, Violet, Transparent, Mid</option>
+          <option value="Bright Yellow-Green">Yellow-Green, Bright</option>
+          <option value="Bright Red Violet">Red, Violet, Bright</option>
+          <option value="Transparent Blue Violet">Violet, Blue, Transparent</option>
+          <option value="Sand Blue">Blue, Sand</option>
+          <option value="Sand Yellow">Yellow, Sand</option>
+          <option value="Earth Blue">Blue, Earth</option>
+          <option value="Earth Green">Green, Earth</option>
+          <option value="Sand Green">Green, Sand</option>
+          <option value="New Dark Red">Red, Dark, New</option>
+          <option value="Transparent Bright Orange">Orange, Transparent, Bright</option>
+          <option value="Florescent Yellow Orange">Yellow-Orange, Florescent</option>
+          <option value="Red Brown">Red Brown</option>
+          <option value="Medium Stone Grey">Grey, Medium, Stone</option>
+          <option value="Dark Stone Grey">Grey, Dark, Stone</option>
+          <option value="Light Royal Blue">Blue, Royal, Light</option>
+          <option value="Bright Purple">Purple, Bright</option>
+          <option value="Light Purple">Purple, Light</option>
+          <option value="Cool Yellow">Yellow, Cool</option>
+          <option value="Transparent Bright Red">Red, Transparent, Bright</option>
+          <option value="Medium Lilac">Medium Lilac</option>
+          <option value="Light Nougat">Nougat, Light</option>
+          <option value="White Gold">White Gold</option>
+          <option value="Dark Brown">Brown, Dark</option>
+          <option value="Medium Nougat">Nougat, Medium</option>
+          <option value="Transparent Bright Green">Green, Transparent, Bright</option>
+          <option value="Silver Metal">Silver Metal</option>
+          <option value="Titanium Metal">Titanium Metal</option>
+          <option value="Dark Azure">Azure, Dark</option>
+          <option value="Medium Azure">Azure, Medium </option>
+          <option value="Aqua">Aqua</option>
+          <option value="Medium Lavendar">Lavender, Medium /option>
+          <option value="Lavender">Lavender</option>
+          <option value="Spring Yellow-Green">Yellow-Green, Spring</option>
+          <option value="Olive Green">Green, Olive</option>
+        </select>
+      </div>
+      <button class="ui green button" type="submit">Submit <i class="angle double right icon"></i></button>
+    </form>
+  </div>
+{% endblock %}
+
+{% block additional_js %}
+  <script>
+  $('select.dropdown').dropdown();
+  </script>
+{% endblock %}

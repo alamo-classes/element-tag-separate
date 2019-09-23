@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Element Sorter - Blocks
+{% endblock %}
+
+{% block sidebar %}
+  <div class="four wide column" style="margin-left: 2rem">
+    <div class="ui menu">
+      <div class="ui menu item">
+        <a style="font-size:large" href="{% url 'block_form' %}">Create New Block <i class="plus icon"></i> </a>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block body %}
+  <div class="ten wide stretched column">
+    {% if blocks %}
+      <table class="ui table">
+      <thead>
+      <tr>
+        <th>Part Number</th>
+        <th>Color</th>
+        <th>Dimensions</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for block in blocks %}
+        <tr>
+          <td><a href="{% url 'block_form_edit' block.part_number %}">{{ block.part_number }}</a></td>
+          <td>{{ block.color_wording }}</td>
+          <td>{{ block.category }}</td>
+          <td>{{ block.description }}</td>
+        </tr>
+      {% endfor %}
+    {% else %}
+      <div class="ui warning message">No blocks are currently in the database. To create new blocks use the link in the left sidebar.</div>
+    {% endif %}
+    </tbody>
+    </table>
+  </div>
+{% endblock %}

@@ -39,7 +39,7 @@ should have a structure like this:
 
 The subfolder names are important, since they define what label is applied to
 each image, but the filenames themselves don't matter. Once your images are
-prepared, you can run the training with a command like this:
+prepared, you can run the training_old with a command like this:
 
 
 ```bash
@@ -65,7 +65,7 @@ program, for example the label_image sample code.
 
 By default this script will use the high accuracy, but comparatively large and
 slow Inception v3 model architecture. It's recommended that you start with this
-to validate that you have gathered good training data, but if you want to deploy
+to validate that you have gathered good training_old data, but if you want to deploy
 on resource-limited platforms, you can try the `--architecture` flag with a
 Mobilenet model. For example:
 
@@ -126,10 +126,10 @@ MAX_NUM_IMAGES_PER_CLASS = 2 ** 27 - 1  # ~134M
 #         pass
 
 def create_image_lists(image_dir, testing_percentage, validation_percentage):
-    """Builds a list of training images from the file system.
+    """Builds a list of training_old images from the file system.
 
     Analyzes the sub folders in the image directory, splits them into stable
-    training, testing, and validation sets, and returns a data structure
+    training_old, testing, and validation sets, and returns a data structure
     describing the lists of images for each label and their paths.
 
     Args:
@@ -139,7 +139,7 @@ def create_image_lists(image_dir, testing_percentage, validation_percentage):
 
     Returns:
       A dictionary containing an entry for each label subfolder, with images split
-      into training, testing, and validation sets within each label.
+      into training_old, testing, and validation sets within each label.
     """
     if not gfile.Exists(image_dir):
         tf.logging.error("Image directory '" + image_dir + "' not found.")
@@ -184,7 +184,7 @@ def create_image_lists(image_dir, testing_percentage, validation_percentage):
             # the same leaf.
             hash_name = re.sub(r'_nohash_.*$', '', file_name)
             # This looks a bit magical, but we need to decide whether this file should
-            # go into the training, testing, or validation sets, and we want to keep
+            # go into the training_old, testing, or validation sets, and we want to keep
             # existing files in the same set even if more files are subsequently
             # added.
             # To do that, we need a stable way of deciding based on just the file name
@@ -202,7 +202,7 @@ def create_image_lists(image_dir, testing_percentage, validation_percentage):
                 training_images.append(base_name)
         result[label_name] = {
             'dir': dir_name,
-            'training': training_images,
+            'training_old': training_images,
             'testing': testing_images,
             'validation': validation_images,
         }
@@ -212,13 +212,13 @@ def get_image_path(image_lists, label_name, index, image_dir, category):
     """"Returns a path to an image for a label at the given index.
 
     Args:
-      image_lists: Dictionary of training images for each label.
+      image_lists: Dictionary of training_old images for each label.
       label_name: Label string we want to get an image for.
       index: Int offset of the image we want. This will be moduloed by the
       available number of images for the label, so it can be arbitrarily large.
-      image_dir: Root folder string of the subfolders containing the training
+      image_dir: Root folder string of the subfolders containing the training_old
       images.
-      category: Name string of set to pull images from - training, testing, or
+      category: Name string of set to pull images from - training_old, testing, or
       validation.
 
     Returns:
@@ -245,12 +245,12 @@ def get_bottleneck_path(image_lists, label_name, index, bottleneck_dir,
     """"Returns a path to a bottleneck file for a label at the given index.
 
     Args:
-      image_lists: Dictionary of training images for each label.
+      image_lists: Dictionary of training_old images for each label.
       label_name: Label string we want to get an image for.
       index: Integer offset of the image we want. This will be moduloed by the
       available number of images for the label, so it can be arbitrarily large.
       bottleneck_dir: Folder string holding cached files of bottleneck values.
-      category: Name string of set to pull images from - training, testing, or
+      category: Name string of set to pull images from - training_old, testing, or
       validation.
       architecture: The name of the model architecture.
 
@@ -381,13 +381,13 @@ def get_or_create_bottleneck(sess, image_lists, label_name, index, image_dir,
 
     Args:
       sess: The current active TensorFlow Session.
-      image_lists: Dictionary of training images for each label.
+      image_lists: Dictionary of training_old images for each label.
       label_name: Label string we want to get an image for.
       index: Integer offset of the image we want. This will be modulo-ed by the
       available number of images for the label, so it can be arbitrarily large.
-      image_dir: Root folder string of the subfolders containing the training
+      image_dir: Root folder string of the subfolders containing the training_old
       images.
-      category: Name string of which set to pull images from - training, testing,
+      category: Name string of which set to pull images from - training_old, testing,
       or validation.
       bottleneck_dir: Folder string holding cached files of bottleneck values.
       jpeg_data_tensor: The tensor to feed loaded jpeg data into.
@@ -433,19 +433,19 @@ def get_or_create_bottleneck(sess, image_lists, label_name, index, image_dir,
 def cache_bottlenecks(sess, image_lists, image_dir, bottleneck_dir,
                       jpeg_data_tensor, decoded_image_tensor,
                       resized_input_tensor, bottleneck_tensor, architecture):
-    """Ensures all the training, testing, and validation bottlenecks are cached.
+    """Ensures all the training_old, testing, and validation bottlenecks are cached.
 
     Because we're likely to read the same image multiple times (if there are no
-    distortions applied during training) it can speed things up a lot if we
+    distortions applied during training_old) it can speed things up a lot if we
     calculate the bottleneck layer values once for each image during
     preprocessing, and then just read those cached values repeatedly during
-    training. Here we go through all the images we've found, calculate those
+    training_old. Here we go through all the images we've found, calculate those
     values, and save them off.
 
     Args:
       sess: The current active TensorFlow Session.
-      image_lists: Dictionary of training images for each label.
-      image_dir: Root folder string of the subfolders containing the training
+      image_lists: Dictionary of training_old images for each label.
+      image_dir: Root folder string of the subfolders containing the training_old
       images.
       bottleneck_dir: Folder string holding cached files of bottleneck values.
       jpeg_data_tensor: Input tensor for jpeg data from file.
@@ -460,7 +460,7 @@ def cache_bottlenecks(sess, image_lists, image_dir, bottleneck_dir,
     how_many_bottlenecks = 0
     ensure_dir_exists(bottleneck_dir)
     for label_name, label_lists in image_lists.items():
-        for category in ['training', 'testing', 'validation']:
+        for category in ['training_old', 'testing', 'validation']:
             category_list = label_lists[category]
             for index, unused_base_name in enumerate(category_list):
                 get_or_create_bottleneck(
@@ -485,13 +485,13 @@ def get_random_cached_bottlenecks(sess, image_lists, how_many, category,
 
     Args:
       sess: Current TensorFlow Session.
-      image_lists: Dictionary of training images for each label.
+      image_lists: Dictionary of training_old images for each label.
       how_many: If positive, a random sample of this size will be chosen.
       If negative, all bottlenecks will be retrieved.
-      category: Name string of which set to pull from - training, testing, or
+      category: Name string of which set to pull from - training_old, testing, or
       validation.
       bottleneck_dir: Folder string holding cached files of bottleneck values.
-      image_dir: Root folder string of the subfolders containing the training
+      image_dir: Root folder string of the subfolders containing the training_old
       images.
       jpeg_data_tensor: The layer to feed jpeg image data into.
       decoded_image_tensor: The output of decoding and resizing the image.
@@ -545,9 +545,9 @@ def get_random_cached_bottlenecks(sess, image_lists, how_many, category,
 def get_random_distorted_bottlenecks(
         sess, image_lists, how_many, category, image_dir, input_jpeg_tensor,
         distorted_image, resized_input_tensor, bottleneck_tensor):
-    """Retrieves bottleneck values for training images, after distortions.
+    """Retrieves bottleneck values for training_old images, after distortions.
 
-    If we're training with distortions like crops, scales, or flips, we have to
+    If we're training_old with distortions like crops, scales, or flips, we have to
     recalculate the full model for every image, and so we can't use cached
     bottleneck values. Instead we find random images for the requested category,
     run them through the distortion graph, and then the full graph to get the
@@ -555,11 +555,11 @@ def get_random_distorted_bottlenecks(
 
     Args:
       sess: Current TensorFlow Session.
-      image_lists: Dictionary of training images for each label.
+      image_lists: Dictionary of training_old images for each label.
       how_many: The integer number of bottleneck values to return.
-      category: Name string of which set of images to fetch - training, testing,
+      category: Name string of which set of images to fetch - training_old, testing,
       or validation.
-      image_dir: Root folder string of the subfolders containing the training
+      image_dir: Root folder string of the subfolders containing the training_old
       images.
       input_jpeg_tensor: The input layer we feed the image data to.
       distorted_image: The output node of the distortion graph.
@@ -617,7 +617,7 @@ def add_input_distortions(flip_left_right, random_crop, random_scale,
                           input_depth, input_mean, input_std):
     """Creates the operations to apply the specified distortions.
 
-    During training it can help to improve the results if we run the images
+    During training_old it can help to improve the results if we run the images
     through simple distortions like crops, scales, and flips. These reflect the
     kind of variations we expect in the real world, and so can help train the
     model to cope with natural data more effectively. Here we take the supplied
@@ -721,7 +721,7 @@ def variable_summaries(var):
 
 def add_final_training_ops(class_count, final_tensor_name, bottleneck_tensor,
                            bottleneck_tensor_size):
-    """Adds a new softmax and fully-connected layer for training.
+    """Adds a new softmax and fully-connected layer for training_old.
 
     We need to retrain the top layer to identify our new classes, so this function
     adds the right operations to the graph, along with some variables to hold the
@@ -738,7 +738,7 @@ def add_final_training_ops(class_count, final_tensor_name, bottleneck_tensor,
       bottleneck_tensor_size: How many entries in the bottleneck vector.
 
     Returns:
-      The tensors for the training and cross entropy results, and tensors for the
+      The tensors for the training_old and cross entropy results, and tensors for the
       bottleneck input and ground truth input.
     """
     with tf.name_scope('input'):
@@ -950,7 +950,7 @@ def main(_):
     # See https://github.com/tensorflow/tensorflow/issues/3047
     tf.logging.set_verbosity(tf.logging.INFO)
 
-    # Prepare necessary directories that can be used during training
+    # Prepare necessary directories that can be used during training_old
     prepare_file_system()
 
     # Gather information about the model architecture we'll be using.
@@ -1005,7 +1005,7 @@ def main(_):
                               decoded_image_tensor, resized_image_tensor,
                               bottleneck_tensor, FLAGS.architecture)
 
-        # Add the new layer that we'll be training.
+        # Add the new layer that we'll be training_old.
         (train_step, cross_entropy, bottleneck_input, ground_truth_input,
          final_tensor) = add_final_training_ops(
             len(image_lists.keys()), FLAGS.final_tensor_name, bottleneck_tensor,
@@ -1027,32 +1027,32 @@ def main(_):
         init = tf.global_variables_initializer()
         sess.run(init)
 
-        # Run the training for as many cycles as requested on the command line.
+        # Run the training_old for as many cycles as requested on the command line.
         for i in range(FLAGS.how_many_training_steps):
             # Get a batch of input bottleneck values, either calculated fresh every
             # time with distortions applied, or from the cache stored on disk.
             if do_distort_images:
                 (train_bottlenecks,
                  train_ground_truth) = get_random_distorted_bottlenecks(
-                    sess, image_lists, FLAGS.train_batch_size, 'training',
+                    sess, image_lists, FLAGS.train_batch_size, 'training_old',
                     FLAGS.image_dir, distorted_jpeg_data_tensor,
                     distorted_image_tensor, resized_image_tensor, bottleneck_tensor)
             else:
                 (train_bottlenecks,
                  train_ground_truth, _) = get_random_cached_bottlenecks(
-                    sess, image_lists, FLAGS.train_batch_size, 'training',
+                    sess, image_lists, FLAGS.train_batch_size, 'training_old',
                     FLAGS.bottleneck_dir, FLAGS.image_dir, jpeg_data_tensor,
                     decoded_image_tensor, resized_image_tensor, bottleneck_tensor,
                     FLAGS.architecture)
-            # Feed the bottlenecks and ground truth into the graph, and run a training
-            # step. Capture training summaries for TensorBoard with the `merged` op.
+            # Feed the bottlenecks and ground truth into the graph, and run a training_old
+            # step. Capture training_old summaries for TensorBoard with the `merged` op.
             train_summary, _ = sess.run(
                 [merged, train_step],
                 feed_dict={bottleneck_input: train_bottlenecks,
                            ground_truth_input: train_ground_truth})
             train_writer.add_summary(train_summary, i)
 
-            # Every so often, print out how well the graph is training.
+            # Every so often, print out how well the graph is training_old.
             is_last_step = (i + 1 == FLAGS.how_many_training_steps)
             if (i % FLAGS.eval_step_interval) == 0 or is_last_step:
                 train_accuracy, cross_entropy_value = sess.run(
@@ -1069,7 +1069,7 @@ def main(_):
                         FLAGS.bottleneck_dir, FLAGS.image_dir, jpeg_data_tensor,
                         decoded_image_tensor, resized_image_tensor, bottleneck_tensor,
                         FLAGS.architecture))
-                # Run a validation step and capture training summaries for TensorBoard
+                # Run a validation step and capture training_old summaries for TensorBoard
                 # with the `merged` op.
                 validation_summary, validation_accuracy = sess.run(
                     [merged, evaluation_step],
@@ -1091,7 +1091,7 @@ def main(_):
                                 intermediate_file_name)
                 save_graph_to_file(sess, graph, intermediate_file_name)
 
-        # We've completed all our training, so run a final test evaluation on
+        # We've completed all our training_old, so run a final test evaluation on
         # some new images we haven't used before.
         test_bottlenecks, test_ground_truth, test_filenames = (
             get_random_cached_bottlenecks(
@@ -1166,13 +1166,13 @@ if __name__ == '__main__':
         '--how_many_training_steps',
         type=int,
         default=4000,
-        help='How many training steps to run before ending.'
+        help='How many training_old steps to run before ending.'
     )
     parser.add_argument(
         '--learning_rate',
         type=float,
         default=0.01,
-        help='How large a learning rate to use when training.'
+        help='How large a learning rate to use when training_old.'
     )
     parser.add_argument(
         '--testing_percentage',
@@ -1190,7 +1190,7 @@ if __name__ == '__main__':
         '--eval_step_interval',
         type=int,
         default=10,
-        help='How often to evaluate the training results.'
+        help='How often to evaluate the training_old results.'
     )
     parser.add_argument(
         '--train_batch_size',
@@ -1204,7 +1204,7 @@ if __name__ == '__main__':
         default=-1,
         help="""\
       How many images to test on. This test set is only used once, to evaluate
-      the final accuracy of the model after training completes.
+      the final accuracy of the model after training_old completes.
       A value of -1 causes the entire test set to be used, which leads to more
       stable results across runs.\
       """
@@ -1216,10 +1216,10 @@ if __name__ == '__main__':
         help="""\
       How many images to use in an evaluation batch. This validation set is
       used much more often than the test set, and is an early indicator of how
-      accurate the model is during training.
+      accurate the model is during training_old.
       A value of -1 causes the entire validation set to be used, which leads to
-      more stable results across training iterations, but may be slower on large
-      training sets.\
+      more stable results across training_old iterations, but may be slower on large
+      training_old sets.\
       """
     )
     parser.add_argument(
@@ -1258,7 +1258,7 @@ if __name__ == '__main__':
         '--flip_left_right',
         default=False,
         help="""\
-      Whether to randomly flip half of the training images horizontally.\
+      Whether to randomly flip half of the training_old images horizontally.\
       """,
         action='store_true'
     )
@@ -1268,7 +1268,7 @@ if __name__ == '__main__':
         default=0,
         help="""\
       A percentage determining how much of a margin to randomly crop off the
-      training images.\
+      training_old images.\
       """
     )
     parser.add_argument(
@@ -1277,7 +1277,7 @@ if __name__ == '__main__':
         default=0,
         help="""\
       A percentage determining how much to randomly scale up the size of the
-      training images by.\
+      training_old images by.\
       """
     )
     parser.add_argument(
@@ -1285,7 +1285,7 @@ if __name__ == '__main__':
         type=int,
         default=0,
         help="""\
-      A percentage determining how much to randomly multiply the training image
+      A percentage determining how much to randomly multiply the training_old image
       input pixels up or down by.\
       """
     )
