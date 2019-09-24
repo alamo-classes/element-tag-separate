@@ -4,22 +4,15 @@
   Element Sorter - Blocks
 {% endblock %}
 
-{% block additional_css %}
-  <style>
-    .centering {
-      position: relative;
-      top: 50%;
-      transform: translateY(-50%);
-    }
-  </style>
-{% endblock %}
-
 {% block full_content %}
   <div class="ui three wide column"></div>
   <div class="ui ten wide column">
     <div class="ui horizontal divider" style="font-size: large">Create/Edit Block Form</div>
     <form class="ui form" method="post" action="{{ action }}">
       {% csrf_token %}
+      {% if errors %}
+        <div class="error message">{{ errors }}</div>
+      {% endif %}
       <div class="ui field">
         <label for="id_part_number">Part number:</label>
         <input type="number" name="part_number" required="" id="id_part_number" placeholder="0123456" value="{{ part.part_number }}">
@@ -104,5 +97,8 @@
 {% block additional_js %}
   <script>
   $('select.dropdown').dropdown();
+  $(document).ready(function () {
+      $("#blocks_item").addClass("active")
+  })
   </script>
 {% endblock %}

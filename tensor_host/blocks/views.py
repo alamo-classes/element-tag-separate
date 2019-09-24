@@ -16,7 +16,6 @@ class BlockProfile(View):
     @staticmethod
     def get(request):
         form = BlockForm()
-        print("Get Request")
         return render(request, 'blocks/block_form.html', {'form': form})
 
     @staticmethod
@@ -26,7 +25,7 @@ class BlockProfile(View):
             form.save()
             return HttpResponseRedirect('/blocks')
         else:
-            return render(request, 'blocks/block_form.html', {'form': form})
+            return render(request, 'blocks/block_form.html', {'form': form, 'errors': form.errors})
 
 
 class BlockProfileEdit(View):
@@ -44,5 +43,4 @@ class BlockProfileEdit(View):
             form.save()
             return HttpResponseRedirect('/blocks')
         else:
-            print(form.errors)
-            return render(request, 'blocks/block_form.html', {'form': form})
+            return render(request, 'blocks/block_form.html', {'form': form, 'errors': form.errors})

@@ -1,4 +1,7 @@
 #!flask/bin/python
+from threading import Thread
+
+import serial
 from flask import Flask, jsonify, send_file, Response
 import logging
 from logging import Formatter, FileHandler
@@ -10,6 +13,35 @@ camera = PiCamera()
 camera.resolution = (1920, 1080)
 camera.start_preview()
 
+class DetectionThread(Thread):
+    def __init__(self, start_event):
+        super(DetectionThread, self).__init__(start_event)
+        self.start_event = start_event
+        self.camera = PiCamera()
+        self.camera.resolution = (1920, 1080)
+        self.arduino_serial = serial.Serial("/dev/ttyACM0", 9600, timeout=5) #TODO: See if timeout should be lower
+
+    def detection_loop(self):
+        while self.start_event.is_set():
+            # Begin first stage of detection. Send command to start detection loop to arduino.
+            self.arduino_serial.write(bytes('m', 'UTF-8'))
+
+            # Wait for the IR detection to trigger
+            detected=False
+            while not detected:
+                log = self.arduino_serial.readline().decode()
+                # TODO: Use function to send log via REST
+                if "Detected" in log:
+                    break
+
+            # Take a new snapshot
+            self.camera.capture('{}/snapshot.jpg'.format(os.getcwd()))
+
+            # Send request for Tensor Flow server to begin processing.
+
+            # Wait for response from Tensor Flow server
+
+            # Perform sorting
 
 @app.route('/')
 def index():
@@ -22,8 +54,13 @@ def snapshot():
     Return a snapshot as a JPEG mimetype
     :return: MIME object
     """
-    camera.capture('snapshot.jpg')
-    return send_file('snapshot.jpg', mimetype='image/jpg')
+    if os.path.exists('{}/snapshot.jpg'.format(os.getcwd())):
+        return send_file('{}/snapshot.jpg'.format(os.getcwd()), mimetype='image/jpg')
+    return "No snapshot taken. Please wait for process to run."
+
+
+@app.route('/detection')
+def
 
 
 @app.errorhandler(500)
