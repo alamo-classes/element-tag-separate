@@ -54,7 +54,7 @@
       $(document).ready(function () {
           $("#training_item").addClass("active")
       });
-      $.active_run = false;
+      let active_run = false;
       function image_poll(){
           $.ajax({
                   type: "GET",
@@ -79,11 +79,14 @@
       $('.fluid.green.button').on('click', function() {
           // Send the initial command to the Raspberry Pi to start the detection loop
           $.ajax({
-              type: "POST",
-              url: "192.168.4.11", //TODO: Use template insertion from settings for IP address
-              data: {
-                  action: 'detect'
-              },
+              type: "GET",
+              url: "http://192.168.0.11:5000/detection_training", //TODO: Use template insertion from settings for IP address
+              success: (function(data){
+                  console.log(data)
+              }),
+              error: (function (error) {
+                  console.log(error);
+              })
           });
 
 
@@ -97,11 +100,14 @@
       $('.fluid.red.button').on('click', function(){
         // Send command to the Raspberry Pi to stop the detection loop after next cycle
         $.ajax({
-              type: "POST",
-              url: "192.168.4.11", //TODO: Use template insertion from settings for IP address
-              data: {
-                  action: 'stop'
-              },
+              type: "GET",
+              url: "http://192.168.0.11:5000/stop_detection", //TODO: Use template insertion from settings for IP address
+              success: (function (data) {
+                  console.log(data);
+              }),
+              error: (function (error) {
+                  console.log(error);
+              })
           });
           // TODO: Make the stop button have a loading icon and indicate that the stop is beginning
       });

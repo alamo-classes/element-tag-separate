@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'blocks',
     'profiles',
     'catalog',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [

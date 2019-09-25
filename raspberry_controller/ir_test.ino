@@ -8,14 +8,15 @@ void setup() {
 }
 
 void loop(){
-  // read the state of the pushbutton value:
+  // read the state of the pushbutton value. output 0 is detection
   sensorState = digitalRead(SENSORPIN);
-
-  if (sensorState && !lastState) {
-    Serial.println("Unbroken");
-  }
-  if (!sensorState && lastState) {
-    Serial.println("Broken");
-  }
-  lastState = sensorState;
+  Serial.print(sensorState);
+  delay(3000);
+//   if (sensorState && !lastState) {
+//     Serial.println("Unbroken");
+//   }
+//   if (!sensorState && lastState) {
+//     Serial.println("Broken");
+//   }
+//   lastState = sensorState;
 }

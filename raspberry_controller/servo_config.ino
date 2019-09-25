@@ -109,7 +109,8 @@ void setup() {
     sorter_servo.attach(SERVO_PIN);
     pinMode(SERVO_FEEDBACK_PIN, INPUT);
 
-    pinMode(4, HIGH)
+    pinMode(4, HIGH);
+    digitalWrite(4, HIGH);
 }
 
 void loop() {
@@ -191,11 +192,11 @@ void loop() {
                 while (Serial.available()  < 1){
                     sensorState = digitalRead(4);
                     if (sensorState) {
-                        Serial.print("sensorState is high")
+                        Serial.print("sensorState is high");
 //                         delay(500)
 //                         Check it again
                     } else {
-                        Serial.print("sensorState is low")
+                        Serial.print("sensorState is low");
                     }
                 }
             default: // Replay that the byte was invalid
@@ -204,6 +205,8 @@ void loop() {
         }
     }
     feedback_servo(sorter_servo_angle);
+    Serial.print(":");
+    Serial.print(errorAngle);
 }
 
 void feedback_servo(int targetAngle) {
