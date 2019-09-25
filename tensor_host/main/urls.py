@@ -16,11 +16,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from settings.views import SettingForm
+
 urlpatterns = [
     path('admin', admin.site.urls),
     path('', include('monitor.urls')),
-    path('training', include('training.urls')),
-    path('catalog', include('catalog.urls')),
-    path('profiles', include('profiles.urls')),
-    path('blocks', include('blocks.urls'))
+    path('training/', include('training.urls')),
+    path('catalog/', include('catalog.urls')),
+    path('profiles/', include('profiles.urls')),
+    path('blocks/', include('blocks.urls')),
+    path('settings/', SettingForm.as_view(), name='settings')
 ]

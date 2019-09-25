@@ -1,7 +1,7 @@
 from django.urls import path
 
 from blocks.views import BlockProfileEdit
-from tensor_host.blocks.views import Blocks, BlockProfile
+from blocks.views import Blocks, BlockProfile
 
 urlpatterns = [
     path('', Blocks.as_view(), name="block"),

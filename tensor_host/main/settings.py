@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'profiles',
     'catalog',
     'rest_framework',
+    'settings',
 ]
 
 MIDDLEWARE = [
