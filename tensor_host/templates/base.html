@@ -16,16 +16,18 @@
 <div class="ui two column grid">
   <div class="ui fluid row">
     <div class="ui inverted fluid menu">
-      <h2 class="header" style="color: white; margin-left: 2rem; margin-top: 1rem;">
+      <a href="/">
+      <h2 class="header" style="color: white; margin-left: 2rem; margin-top: 1rem; margin-bottom: 1rem">
         Element Sorter
         <i class="python icon"></i>
       </h2>
+      </a>
       <div class="ui inverted right menu" style="margin-right: 2rem">
         <a id="blocks_item" class="item" href="{% url 'block' %}">Blocks</a>
         <a id="capture_item" class="item" href="{% url 'capture' %}">Capture</a>
         <a id="training_item" class="item" href="{% url 'training' %}">Training</a>
         <a id="profile_item" class="item" href="{% url 'profile' %}">Profiles</a>
-        <a id="monitor_item" class="item" href="/">Monitor</a>
+        <a id="monitor_item" class="item" href="{% url 'sorting' %}">Sorting</a>
         <a id="catalog_item" class="item" href="{% url 'catalog' %}">Catalog</a>
         <a id="setting_item" class="item" href="{% url 'settings' %}">Settings</a>
       </div>
