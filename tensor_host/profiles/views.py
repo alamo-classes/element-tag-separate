@@ -7,7 +7,9 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
+from blocks.models import BlockCatalog
 from profiles.models import ProfileCatalog, ProfileForm
+from training.capture import CaptureLabeledImages
 
 
 class Profile(View):
@@ -24,7 +26,8 @@ class ProfileCreateForm(View):
     @staticmethod
     def get(request):
         form = ProfileForm()
-        return render(request, 'profile/profile_form.html', {'form': form})
+        blocks = BlockCatalog.objects.all()
+        return render(request, 'profile/profile_form.html', {'form': form, 'blocks': blocks})
 
     @staticmethod
     def post(request):
@@ -44,14 +47,14 @@ class ProfileEditForm(View):
 
 
 @api_view(['GET'])
-def detection_training_alert(request):
-    print("Got a REST get request")
+def detection_training_alert(request, label):
+    capture_image = CaptureLabeledImages(label)
+    capture_image.get_snapshot()
     msg = json.dumps({'status': status.HTTP_200_OK})
     return Response(msg)
 
 
 @api_view(['GET'])
 def detection_sorting_alert(request):
-    print("Got a Rest get sorting request")
     msg = json.dumps({'status': status.HTTP_200_OK})
     return Response(msg)

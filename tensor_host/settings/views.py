@@ -4,6 +4,10 @@ from django.views import View
 from settings.models import ElementSettingForm, ElementSettings
 
 
+def index(request):
+    return render(request, 'settings/index.html')
+
+
 class SettingForm(View):
     @staticmethod
     def get(request):

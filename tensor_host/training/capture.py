@@ -4,18 +4,22 @@ Training will only use the primary Raspberry Pi (#0 in the configuration file)
 """
 import io
 import os
+import sys
 import uuid
 from urllib import request
 from PIL import Image
 import pandas as pd
 
+from settings.models import ElementSettings
+
 
 class CaptureLabeledImages:
-    def __init__(self, arg_flags, config_args):
-        self.rasp1_ip = config_args["Raspberry_IP"]["0"]
-        self.train_data = os.path.join(config_args["Artifacts"]["artifact_dir"], 'train/')
-        self.df_path = os.path.join(config_args["Artifacts"]["artifact_dir"], 'labels.csv')
-        self.label = arg_flags.label
+    def __init__(self, label):
+        settings_file = ElementSettings.objects.first()
+        self.rasp1_ip = settings_file.rasp1_ip
+        self.train_data = os.path.join(os.getcwd(), '../artifacts/train/')
+        self.df_path = os.path.join(os.getcwd(), '../artifacts/labels.csv')
+        self.label = label
         os.makedirs(self.train_data, exist_ok=True)
 
     def get_snapshot(self):
