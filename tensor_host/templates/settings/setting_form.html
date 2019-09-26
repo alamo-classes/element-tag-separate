@@ -30,3 +30,11 @@
       </form>
     </div>
 {% endblock %}
+
+{% block additional_js %}
+  <script>
+    $(document).ready(function() {
+        $("#setting_item").addClass("active")
+    })
+  </script>
+{% endblock %}

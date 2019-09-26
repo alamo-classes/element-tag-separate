@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-  Element Sorter - Monitor
+  Element Sorter - Capture
 {% endblock %}
 
 {% block sidebar %}
@@ -52,7 +52,7 @@
 {% block additional_js %}
   <script>
       $(document).ready(function () {
-          $("#training_item").addClass("active")
+          $("#capture_item").addClass("active")
       });
       let active_run = false;
       function image_poll(){

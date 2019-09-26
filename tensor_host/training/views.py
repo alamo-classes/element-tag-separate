@@ -8,3 +8,9 @@ class Train(View):
     @staticmethod
     def get(request):
         return render(request, 'training/training.html', {})
+
+
+class TrainingForm(View):
+    @staticmethod
+    def get(request):
+        return render(request, 'training/training_form.html', {})
