@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block full_content %}
+  <div class="ui three wide column"></div>
+  <div class="ui ten wide column segment">
+    <div class="ui horizontal divider" style="font-size: large">Instruction Guide</div>
+    <div class="ui info message">
+      <pre style="font-size: medium">
+          This website is used to collect, train, and enact sorting by the Element Sorter. The following
+        steps are used in creating a new neural net sorting profile:
+
+        1. In the "Blocks" tab, create any number of elements to represent your Lego Collection.
+
+        2. In the "Capture" tab, select a block that you would like to train. Fill the machine's
+          hopper with as many of that block as you would like. Click the run button which will
+          take image captures of the block. Click stop after you are done to end the capture loop.
+
+        3. Once you have captured multiple blocks, it is time to train your network. In the
+          "Training" tab, use the form to submit a new network mapping. The software will then
+          begin the training process (it takes some time). Once the training is completed, you will
+          be able to use the network to build profiles.
+
+        4. Profiles, accessed through the "Profiles" tab, are used to tell the machine what to do
+          with the part once it is identified. Using the profile's form, select the network you would like
+          to profile. For each bin, select the part(s) that you would like to sort into it respectively.
+          Note that a single network can have multiple profiles.
+
+        5. In the "Sorting" tab, select the profile you would like to use and click the run button.
+          The machine will sort the Lego elements until you click the stop button.
+
+        6. The "Catalog" tab allows you to visualize which parts were sorted by the machine. They are
+          arranged by time stamp for easier tracking.
+      </pre>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Element Sorter - Catalog
+{% endblock %}
+
+{% block additional_js %}
+  <script>
+    $(document).ready(function () {
+        $("#catalog_item").addClass("active")
+    });
+  </script>
+{% endblock %}

@@ -5,14 +5,17 @@ Arguments:
 -- mode: Choose from one of the following modes:
     1. Setup - Used to write a new configuation file for the LEGO element sorter
     2. Capture - Capture new pictures for a dedicated label. Save pictures and append to the CSV file
-    3. Training - Using the label CSV and the training images produce a new neural network through transfer learning
+    3. Training - Using the label CSV and the training_old images produce a new neural network through transfer learning
     4. Identify - Using the trained neural network, identify the targeted LEGO element
 -- config_pwd: Directory which the configuration file is located
--- label: Label to be set when capturing training data
+-- label: Label to be set when capturing training_old data
 """
 import argparse
 import configparser
 import os
+
+from training.capture import CaptureLabeledImages
+from training.process import organize_dataset
 
 
 def parse_config(config_dir):
@@ -37,7 +40,7 @@ def setup_config(config_dir):
         os.getcwd()))
     if not artifact_dir:
         artifact_dir = os.getcwd()
-
+    artifact_dir = os.path.join(artifact_dir, 'artifacts/')
     # Construct the parser for the user arguments
     configuration = configparser.ConfigParser()
 
@@ -51,7 +54,7 @@ def setup_config(config_dir):
     pi_ip = dict()
     for pi_num in range(number_of_cams):
         pi_ip[pi_num] = input("Please enter the IP address for Raspberry Pi #{}: ".format(pi_num))
-        configuration['Raspbery_IP'][pi_num] = pi_ip
+        configuration['Raspberry_IP'][pi_num] = pi_ip
 
     # Write the configuation file
     with open('{}/config.ini'.format(config_dir), 'w') as configfile:
@@ -94,13 +97,24 @@ if __name__ == "__main__":
     # Run capture routine
     if FLAGS.mode == "capture":
         config = parse_config(FLAGS.config_pwd)
+        print("Configuration loaded...")
+        print("Beginning Capture Process...")
+        capture_img = CaptureLabeledImages(arg_flags=FLAGS, config_args=config)
+        capture_img.get_snapshot()
 
-        print(config["Artifacts"]["artifact_dir"])
-
-    # Run training routine
-    if FLAGS.mode == "training":
+    if FLAGS.mode == "process":
         config = parse_config(FLAGS.config_pwd)
+        print("Configuration loaded...")
+        print("Beginning Data Processing...")
+        organize_dataset(config)
+
+    # Run training_old routine
+    if FLAGS.mode == "training_old":
+        config = parse_config(FLAGS.config_pwd)
+        print("Configuration loaded...")
+        print("Beginning Training Image Classifier")
 
     # Run identification routine
     if FLAGS.mode == "identify":
         config = parse_config(FLAGS.config_pwd)
+        print("Configuration loaded...")

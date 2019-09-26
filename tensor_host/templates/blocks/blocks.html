@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Element Sorter - Blocks
+{% endblock %}
+
+{% block additional_css %}
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+{% endblock %}
+
+{% block sidebar %}
+  <div class="four wide column" style="margin-left: 2rem">
+  <div class="ui menu">
+    <div class="ui menu item">
+      <a style="font-size:large" href="{% url 'block_form' %}">Create New Block <i class="plus icon"></i> </a>
+    </div>
+  </div>
+  </div>
+{% endblock %}
+
+{% block body %}
+  <div class="ten wide stretched column">
+    {% if blocks %}
+      <div class="ui segment">
+      <table id="block_table" class="display" style="width:100%;" role="grid">
+      <thead>
+      <tr role="row">
+        <th class="sorting_asc" tabindex="0" rowspan="1" colspan="1" style="width: 152px">Part Number</th>
+        <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 236px;">Color</th>
+        <th class="sorting_asc" tabindex="0" rowspan="1" colspan="1" style="width: 113px">Photo Count</th>
+        <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 200px">Category</th>
+        <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 200px">Description</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for block in blocks %}
+        <tr role="row">
+          <td class="sorting_1" tabindex="0"><a href="{% url 'block_form_edit' block.part_number %}">{{ block.part_number }}</a></td>
+          <td>{{ block.color_wording }}</td>
+          <td>{{ block.photo_count }}</td>
+          <td>{{ block.category }}</td>
+          <td>{{ block.description }}</td>
+        </tr>
+      {% endfor %}
+    {% else %}
+      <div class="ui warning message">No blocks are currently in the database. To create new blocks use the link in the
+        left sidebar.
+      </div>
+    {% endif %}
+    </tbody>
+    </table>
+  </div>
+  </div>
+{% endblock %}
+
+{% block additional_js %}
+  <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+  <script>
+    $(document).ready(function () {
+        $('#block_table').DataTable();
+        $("#blocks_item").addClass("active")
+    });
+  </script>
+
+{% endblock %}

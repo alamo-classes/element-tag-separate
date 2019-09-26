@@ -106,3 +106,7 @@ venv.bak/
 # Pycharm
 .idea/
 tensor_host/config.ini
+tensor_host/artifacts/
+
+# Django
+migrations/

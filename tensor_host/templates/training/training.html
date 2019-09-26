@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Element Sorter - Training
+{% endblock %}
+
+{% block additional_css %}
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+{% endblock %}
+
+{% block sidebar %}
+  <div class="four wide column" style="margin-left: 2rem">
+    <div class="ui menu">
+      <div class="ui menu item">
+        <a style="font-size: large" href="{% url 'training_form' %}">Train New Network <i class="plus icon"></i></a>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block body %}
+  <div class="ten wide stretched column">
+    {% if networks %}
+      <div class="ui segment">
+      <table id="network_table" class="display" style="width:100%;" role="grid">
+        <thead>
+        <tr role="row">
+          <th class="sorting_asc" tabindex="0" rowspan="1" colspan="1" style="width:150px;">Network Name</th>
+          <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width:150px;">Training Status</th>
+          <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width:150px;">Number of Blocks</th>
+          <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width:150px;">Number of Captures</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for network in networks %}
+          <tr role="row">
+            <td class="sorting_1" tabindex="0">{{ network.name }}</td>
+            <td>{{ network.status }}</td>
+            <td>{{ network.block_count }}</td>
+            <td>{{ network.capture_count }}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+      </div>
+    {% else %}
+      <div class="ui warning message">No networks are currently trained. To create a new network, use the link in the left sidebar.</div>
+    {% endif %}
+  </div>
+{% endblock %}
+
+{% block additional_js %}
+  <script>
+    $(document).ready(function() {
+        $("#training_item").addClass("active")
+    })
+  </script>
+{% endblock %}

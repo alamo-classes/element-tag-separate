@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Element Sorter - Profile
+{% endblock %}
+
+{% block additional_css %}
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+{% endblock %}
+
+{% block sidebar %}
+  <div class="four wide column" style="margin-left: 2rem">
+  <div class="ui menu">
+    <div class="ui menu item">
+      <a style="font-size:large" href="{% url 'profile_create' %}">Create New Profile <i class="plus icon"></i> </a>
+    </div>
+  </div>
+  </div>
+{% endblock %}
+
+{% block body %}
+  <div class="ten wide stretched column">
+    {% if blocks %}
+      <div class="ui segment">
+      <table id="profile_table" class="display" style="width:100%;" role="grid">
+      <thead>
+      <tr role="row">
+        <th class="sorting_asc" tabindex="0" rowspan="1" colspan="1" style="width: 152px">Profile Name</th>
+        <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 236px;">Tags</th>
+        <th class="sorting_asc" tabindex="0" rowspan="1" colspan="1" style="width: 113px">Blocks</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for profile in profiles %}
+        <tr role="row">
+          <td class="sorting_1" tabindex="0"><a href="{% url 'profile_edit' profile.id %}">{{ profile.name }}</a></td>
+          <td>{{ profile.tags }}</td>
+          <td>{{ profile.blocks }}</td>
+        </tr>
+      {% endfor %}
+    {% else %}
+      <div class="ui warning message">No profiles are currently in the database. To create new profiles use the link in the
+        left sidebar.
+      </div>
+    {% endif %}
+    </tbody>
+    </table>
+  </div>
+  </div>
+{% endblock %}
+
+{% block additional_js %}
+  <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+  <script>
+    $(document).ready(function () {
+        $('#profile_table').DataTable();
+        $("#profile_item").addClass("active");
+    });
+  </script>
+
+{% endblock %}
