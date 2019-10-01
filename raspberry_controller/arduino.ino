@@ -109,19 +109,18 @@ void loop() {
                 // Start the motors
                 camera_servo.write(100);
                 hopper_servo.write(92);
-                feeder_servo.write(100);
+                feeder_servo.write(95);
                 // Wait on the block to be detected
                 while (sensorState) {
                     sensorState = digitalRead(SENSORPIN);
-                    if (sensorState == 0){
-                        delay(1000);
-                        sensorState = digitalRead(SENSORPIN);
-                    }
                 }
-                // Stop the servos
-                camera_servo.write(90);
+                // Slow the servos
+                camera_servo.write(95);
                 hopper_servo.write(90);
                 feeder_servo.write(90);
+                // Wait till part gets into position, then stop the servo
+                delay(3000);
+                camera_servo.write(90);
                 Serial.println("Detected, Detected, Detected");
                 break;
             case 'b': // Move part off of belt
@@ -147,7 +146,6 @@ void feedback_servo(int targetAngle) {
   // Check if our cycle time was appropriate
   if (!(tCycle > 1000 && tCycle < 1200)) {
     // Invalid cycle time, so try pulse measuring again
-    // Serial.println("Invalid cycle time");
     return;
   }
   // Calculate the duty cycle of the pulse
@@ -190,11 +188,6 @@ void feedback_servo(int targetAngle) {
   } else if (errorAngle < 0) {
     offset = -1 * ERROR_ANGLE_OFFSET_US;
   }
-
-//   Serial.print("Current angle: ");
-//   Serial.print(currentAngle);
-//   Serial.print(" / ");
-//   Serial.print(errorAngle);
 
   outputSpeed = HOLD_STILL_PULSE_SPEED_US + outputSpeed + offset;
   sorter_servo.writeMicroseconds(outputSpeed);

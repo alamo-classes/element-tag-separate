@@ -9,7 +9,6 @@ from rest_framework.response import Response
 
 from blocks.models import BlockCatalog
 from profiles.models import ProfileCatalog, ProfileForm
-from training.capture import CaptureLabeledImages
 
 
 class Profile(View):
@@ -44,15 +43,6 @@ class ProfileEditForm(View):
     @staticmethod
     def post(request, profile_id):
         pass
-
-
-@api_view(['GET'])
-def detection_training_alert(request, label):
-    capture_image = CaptureLabeledImages(label)
-    capture_image.get_snapshot()
-    msg = json.dumps({'status': status.HTTP_200_OK})
-    return Response(msg)
-
 
 @api_view(['GET'])
 def detection_sorting_alert(request):

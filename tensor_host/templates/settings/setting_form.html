@@ -8,15 +8,19 @@
     <div class="ui three wide column"></div>
     <div class="ui ten wide column">
     <div class="ui horizontal divider" style="font-size: large">Settings Form</div>
+      {% if form.errors %}
+        <div class="ui error message">{{ form.errors }}</div>
+      {% endif %}
       <form class="ui form" method="post" action="{{ action }}">
+        {% csrf_token %}
         <div class="ui field">
           <label for="rpi_addr">Raspberry Pi IP Address</label>
-          <input id="rpi_addr" name="rpi_id_addr" required type="text" placeholder="http://192.168.0.12">
+          <input id="rpi_addr" name="rpi_id_addr" required type="text" placeholder="http://192.168.0.12" value="{{ setting_instance.rpi_id_addr }}">
         </div>
         <div class="ui warning message">The tolerance is the percentage match that a captured image is recognised by the neural network. Increasing the percentage will result in fewer bad sorts; however, will result in multiple parts not being sorted.</div>
         <div class="ui field">
           <label for="id_tolerance">Tolerance Percentage</label>
-          <select id="id_tolerance" required>
+          <select id="id_tolerance" name="tolerance" required>
             <option value="">Select a Tolerance</option>
             <option value=".7">70%</option>
             <option value=".75">75%</option>
@@ -26,7 +30,7 @@
             <option value=".95">95%</option>
           </select>
         </div>
-        <div class="ui green button">Submit <i class="angle double right icon"></i></div>
+        <button class="ui green button" type="submit">Submit <i class="angle double right icon"></i></button>
       </form>
     </div>
 {% endblock %}
