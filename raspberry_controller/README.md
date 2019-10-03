@@ -32,3 +32,10 @@ Compile the sketch and upload
 arduino-cli compile --fqbn arduino:avr:mega $HOME/Arduino/test_servo
 arduino-cli upload -p /dev/ttyACM0 --fqbn arduino:avr:mega $HOME/Arduino/test_servo
 ```
+
+Setup environment (additional)
+source venv/bin/activate
+pip install -r requirements.txt
+sudo cp video_stream.service /etc/systemd/system/
+sudo cp flask.service /etc/systemd/system/
+sudo service video_stream enable

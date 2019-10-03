@@ -20,28 +20,28 @@
 
 {% block body %}
   <div class="ten wide stretched column">
-      <div class="ui top attached segment" style="height: 600px">
-        <iframe src="{{ settings.rpi_id_addr }}:5000/snapshot" style="height: 595px; width: 1150px"></iframe>
-      </div>
-      <div class="ui bottom attached inverted segment">
-        <div class="ui warning message">To start training, select a block and click run.</div>
-        <form class="ui inverted form">
-          <div class="field">
-            <label for="block_dropdown">Block</label>
-            <select id="block_dropdown" class="ui fluid dropdown">
-              <option value="">Select an option</option>
-              {% for block in blocks %}
-                <option value="{{ block.part_number }}">#{{ block.part_number }} [{{ block.color_wording }}]
-                  -- {{ block.description }}</option>
-              {% endfor %}
-            </select>
-          </div>
-          <div class="ui two buttons">
-            <button class="ui three wide fluid green button" type="button">Run</button>
-            <button class="ui three wide fluid red button" type="button">Stop</button>
-          </div>
-        </form>
-      </div>
+    <center class="ui top attached inverted segment" style="height: 400px">
+      <iframe src="http://{{ settings.rpi_id_addr }}:5001" style="width: 700px; height: 510px"></iframe>
+    </center>
+    <div class="ui bottom attached inverted segment">
+      <div class="ui warning message">To start training, select a block and click run.</div>
+      <form class="ui inverted form">
+        <div class="field">
+          <label for="block_dropdown">Block</label>
+          <select id="block_dropdown" class="ui fluid dropdown">
+            <option value="">Select an option</option>
+            {% for block in blocks %}
+              <option value="{{ block.part_number }}">#{{ block.part_number }} [{{ block.color_wording }}]
+                -- {{ block.description }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="ui two buttons">
+          <button class="ui three wide fluid green button" type="button">Run</button>
+          <button class="ui three wide fluid red button" type="button">Stop</button>
+        </div>
+      </form>
+    </div>
   </div>
 {% endblock %}
 
@@ -52,21 +52,18 @@
       });
       $(".ui.embed").embed();
       let active_run = false;
-      function image_poll(){
-          let selection_dropdown = $(".ui.fluid.dropdown").val();
-          if (selection_dropdown !== "") {
-              $.ajax({
-                  type: "GET",
-                  url: `${document.location.origin}/image_poll`,
-                  data: selection_dropdown,
-                  success: function (data) {
-                      console.log(data);
-                  }
-              });
-          }
+
+      function image_poll() {
+          $.ajax({
+              type: "GET",
+              url: `${document.location.origin}/image_poll`,
+              success: function (data) {
+                  console.log(data);
+              }
+          });
       }
 
-      function logging_poll(){
+      function logging_poll() {
           $.ajax({
               type: "GET",
               url: `${document.location.origin}/logging_poll`,
@@ -77,30 +74,33 @@
           })
       }
 
-      $('.fluid.green.button').on('click', function() {
+      $('.fluid.green.button').on('click', function () {
           // Send the initial command to the Raspberry Pi to start the detection loop
-          $.ajax({
-              type: "GET",
-              url: "http://192.168.0.11:5000/detection_training", //TODO: Use template insertion from settings for IP address
-              success: (function(data){
-                  console.log(data)
-              }),
-              error: (function (error) {
-                  console.log(error);
+          let selection_dropdown = $(".ui.fluid.dropdown").val();
+          if (selection_dropdown !== "") {
+              $.ajax({
+                  type: "GET",
+                  url: "http://192.168.0.11:5000/detection_training", //TODO: Use template insertion from settings for IP address
+                  data: {"label":selection_dropdown},
+                  success: (function (data) {
+                      console.log(data)
+                  }),
+                  error: (function (error) {
+                      console.log(error);
+                  })
               })
-          });
-
-
-          $.active_run = true;
-          while(active_run) {
-              setTimeout(image_poll(), 1);
-              setTimeout(logging_poll(), 1);
           }
+
+          //  $.active_run = true;
+          // while (active_run) {
+          //    setTimeout(image_poll(), 1);
+          //    setTimeout(logging_poll(), 1);
+          //}
       });
 
-      $('.fluid.red.button').on('click', function(){
-        // Send command to the Raspberry Pi to stop the detection loop after next cycle
-        $.ajax({
+      $('.fluid.red.button').on('click', function () {
+          // Send command to the Raspberry Pi to stop the detection loop after next cycle
+          $.ajax({
               type: "GET",
               url: "http://192.168.0.11:5000/stop_detection", //TODO: Use template insertion from settings for IP address
               success: (function (data) {
