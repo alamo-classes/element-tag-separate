@@ -1,7 +1,6 @@
 import glob
 import os
 import io
-import re
 import time
 from urllib import request
 
@@ -22,9 +21,10 @@ class Capture(View):
     @staticmethod
     def get(request):
         blocks = BlockCatalog.objects.all()
-        if not ElementSettings.objects.first():
+        settings = ElementSettings.objects.first()
+        if not settings:
             return HttpResponseRedirect("/settings/")
-        return render(request, 'capture/capture.html', {'blocks': blocks})
+        return render(request, 'capture/capture.html', {'blocks': blocks, 'settings': settings})
 
     @staticmethod
     def post(request):
@@ -33,15 +33,14 @@ class Capture(View):
         Send the last image of the part (if exists) to the client.
         """
         # TODO: Redo this to use a template insertion
-        part_id = request.POST.get("part_id")
-        if os.path.exists(os.path.join("../artifacts/", part_id)):
-            file_list = glob.glob(os.path.join("../artifacts/", part_id, "*"))
-            time_hack = []
-            for part_file in file_list:
-                time_hack.append(part_file.split("_")[1].split(".")[0])
-            return HttpResponse(file(os.path.join("../artifacts/", "{}.jpg".format(max(time_hack)))))
-
-
+        # part_id = request.POST.get("part_id")
+        # if os.path.exists(os.path.join("../artifacts/", part_id)):
+        #     file_list = glob.glob(os.path.join("../artifacts/", part_id, "*"))
+        #     time_hack = []
+        #     for part_file in file_list:
+        #         time_hack.append(part_file.split("_")[1].split(".")[0])
+        #     return HttpResponse(file(os.path.join("../artifacts/", "{}.jpg".format(max(time_hack)))))
+        pass
 
 
 @api_view(['GET'])
@@ -72,4 +71,4 @@ class CaptureLabeledImages:
         file = io.BytesIO(request.urlopen("{}:5000/snapshot".format(settings.rpi_id_addr)).read())
         img = Image.open(file)
         # Use (label)_(UTC_time).jpg as file format
-        img.save(os.path.join(artifact_dir, "{}_{}.jpg".format(self.label, str(int(time.time())))))
+        img.save(os.path.join(artifact_dir, "dataset/", "{}_{}.jpg".format(self.label, str(int(time.time())))))

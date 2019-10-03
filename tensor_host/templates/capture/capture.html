@@ -20,14 +20,11 @@
 
 {% block body %}
   <div class="ten wide stretched column">
-    <div class="ui inverted  segment">
-      <div class="ui warning message">To start training, select a block and click run.</div>
-      <div class="ui top attached segment" style="height: 500px">
-        <div class="ui fluid placeholder" style="height: 470px">
-          <div class="image"></div>
-        </div>
+      <div class="ui top attached segment" style="height: 600px">
+        <iframe src="{{ settings.rpi_id_addr }}:5000/snapshot" style="height: 595px; width: 1150px"></iframe>
       </div>
       <div class="ui bottom attached inverted segment">
+        <div class="ui warning message">To start training, select a block and click run.</div>
         <form class="ui inverted form">
           <div class="field">
             <label for="block_dropdown">Block</label>
@@ -45,7 +42,6 @@
           </div>
         </form>
       </div>
-    </div>
   </div>
 {% endblock %}
 
@@ -54,15 +50,20 @@
       $(document).ready(function () {
           $("#capture_item").addClass("active")
       });
+      $(".ui.embed").embed();
       let active_run = false;
       function image_poll(){
-          $.ajax({
+          let selection_dropdown = $(".ui.fluid.dropdown").val();
+          if (selection_dropdown !== "") {
+              $.ajax({
                   type: "GET",
                   url: `${document.location.origin}/image_poll`,
-                  success: function(data){
-                    console.log(data);
+                  data: selection_dropdown,
+                  success: function (data) {
+                      console.log(data);
                   }
               });
+          }
       }
 
       function logging_poll(){
