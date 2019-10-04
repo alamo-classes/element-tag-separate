@@ -1,3 +1,5 @@
+from os import path, listdir
+
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views import View
@@ -9,6 +11,7 @@ class Blocks(View):
     @staticmethod
     def get(request):
         blocks = BlockCatalog.objects.all()
+        update_block_count(blocks)
         return render(request, 'blocks/blocks.html', {'blocks': blocks})
 
 
@@ -44,3 +47,18 @@ class BlockProfileEdit(View):
             return HttpResponseRedirect('/blocks')
         else:
             return render(request, 'blocks/block_form.html', {'form': form, 'errors': form.errors})
+
+
+def update_block_count(blocks):
+    """
+    Update the photo count of the blocks based on what is in the artifacts directory.
+    If the number of photos is over the the required threshold,
+    :param blocks: Query set of blocks to have their photo count updated
+    """
+    for block in blocks:
+        block_artifact_directory = path.join("artifacts", str(block.part_number))
+        if path.exists(block_artifact_directory):
+            block.photo_count = len([file for file in listdir(block_artifact_directory)])
+            if block.photo_count > 1:
+                block.training_valid = True
+            block.save()

@@ -1,1 +1,40 @@
 {% extends 'base.html' %}
+
+{% block full_content %}
+    <div class="ui three wide column"></div>
+    <div class="ui ten wide column">
+      <div class="ui horizontal divider" style="font-size: large">Train New Neural Network</div>
+      <div class="ui segment">
+        {% if form.errors %}
+          <div class="ui fluid warning message">{{ form.errors }}</div>
+        {% endif %}
+        <form class="ui form" method="post" action="{{ action }}">
+          {% csrf_token %}
+          <div class="field">
+            <label for=id_name>Name</label>
+            <input id="id_name" name="name" type="text" class="ui input" maxlength="64" value="{{ form.name.value|default_if_none:"" }}" required>
+          </div>
+          <div class="field">
+            <label for="id_desc">Description</label>
+            <input id="id_desc" name="description" maxlength="256" value="{{ form.description.value|default:"" }}" required>
+          </div>
+          <div class="field">
+            <label for="id_blocks">Blocks</label>
+            <select class="ui dropdown" id="id_blocks" name="blocks" required multiple>
+              <option value="">Select Blocks to Include</option>
+              {% for block in blocks %}
+                <option value="{{ block.part_number }}">{{ block.part_number }}: {{ block.color_wording }} | {{ block.category }} | {{ block.description }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <button class="ui green button" type="submit">Submit <i class="angle double right icon"></i></button>
+        </form>
+      </div>
+    </div>
+{% endblock %}
+
+{% block additional_js %}
+  <script>
+    $(".ui.dropdown").dropdown();
+  </script>
+{% endblock %}

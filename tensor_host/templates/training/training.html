@@ -12,7 +12,11 @@
   <div class="four wide column" style="margin-left: 2rem">
     <div class="ui menu">
       <div class="ui menu item">
+        {% if training_flag %}
         <a style="font-size: large" href="{% url 'training_form' %}">Train New Network <i class="plus icon"></i></a>
+        {% else %}
+        <a style="font-size: large; color:#aca8a5;">Please Capture More Blocks Before Training</a>
+        {% endif %}
       </div>
     </div>
   </div>
@@ -24,20 +28,28 @@
       <div class="ui segment">
       <table id="network_table" class="display" style="width:100%;" role="grid">
         <thead>
-        <tr role="row">
-          <th class="sorting_asc" tabindex="0" rowspan="1" colspan="1" style="width:150px;">Network Name</th>
-          <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width:150px;">Training Status</th>
-          <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width:150px;">Number of Blocks</th>
-          <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width:150px;">Number of Captures</th>
-        </tr>
+          <tr role="row">
+            <th class="sorting_asc">Training Status</th>
+            <th>Network Name</th>
+            <th>Description</th>
+            <th>Number of Unique Blocks</th>
+          </tr>
         </thead>
         <tbody>
         {% for network in networks %}
           <tr role="row">
-            <td class="sorting_1" tabindex="0">{{ network.name }}</td>
-            <td>{{ network.status }}</td>
-            <td>{{ network.block_count }}</td>
-            <td>{{ network.capture_count }}</td>
+            {% if network.training_status %}
+              <td style="text-align: center">
+                <i class="ui green large check icon" data-tooltip=""></i>
+              </td>
+              {% else %}
+              <td style="text-align: center" data-tooltip="Still training network. Please refresh after network has been trained.">
+                <i class="ui green large loading sync icon"></i>
+              </td>
+            {% endif %}
+            <td class="sorting_1" style="text-align: center">{{ network.name }}</td>
+            <td style="text-align: center">{{ network.description }}</td>
+            <td style="text-align: center">{{ network.block_count }}</td>
           </tr>
         {% endfor %}
         </tbody>
@@ -50,9 +62,11 @@
 {% endblock %}
 
 {% block additional_js %}
+  <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
   <script>
     $(document).ready(function() {
         $("#training_item").addClass("active")
-    })
+    });
+    $(".display").DataTable();
   </script>
 {% endblock %}

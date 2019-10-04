@@ -1,3 +1,4 @@
 from django.contrib import admin
+from training.models import NeuralNets
 
-# Register your models here.
+admin.site.register(NeuralNets)

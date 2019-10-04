@@ -1,3 +1,4 @@
 from django.contrib import admin
+from blocks.models import BlockCatalog
 
-# Register your models here.
+admin.site.register(BlockCatalog)
