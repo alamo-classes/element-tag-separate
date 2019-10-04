@@ -9,13 +9,15 @@ from rest_framework.response import Response
 
 from blocks.models import BlockCatalog
 from profiles.models import ProfileCatalog, ProfileForm
+from training.models import NeuralNets
 
 
 class Profile(View):
     @staticmethod
     def get(request):
         profiles = ProfileCatalog.objects.all()
-        return render(request, 'profile/profile.html', {'profiles': profiles})
+        networks = NeuralNets.objects.all()
+        return render(request, 'profiles/profile.html', {'profiles': profiles, 'networks': networks})
 
     def post(self, request):
         pass
@@ -23,10 +25,10 @@ class Profile(View):
 
 class ProfileCreateForm(View):
     @staticmethod
-    def get(request):
+    def get(request, network_id):
         form = ProfileForm()
         blocks = BlockCatalog.objects.all()
-        return render(request, 'profile/profile_form.html', {'form': form, 'blocks': blocks})
+        return render(request, 'profiles/profile_form.html', {'form': form, 'blocks': blocks})
 
     @staticmethod
     def post(request):
@@ -38,7 +40,7 @@ class ProfileEditForm(View):
     def get(request, profile_id):
         profile = ProfileCatalog.objects.get(id=profile_id)
         form = ProfileForm(instance=profile)
-        return render(request, 'profile/profile_form.html', {'form': form, 'profile': profile})
+        return render(request, 'profiles/profile_form.html', {'form': form, 'profile': profile})
 
     @staticmethod
     def post(request, profile_id):

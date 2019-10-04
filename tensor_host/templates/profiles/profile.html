@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Element Sorter - Profile
+  Element Sorter - Profile
 {% endblock %}
 
 {% block additional_css %}
@@ -10,11 +10,11 @@ Element Sorter - Profile
 
 {% block sidebar %}
   <div class="four wide column" style="margin-left: 2rem">
-  <div class="ui menu">
-    <div class="ui menu item">
-      <a style="font-size:large" href="{% url 'profile_create' %}">Create New Profile <i class="plus icon"></i> </a>
+    <div class="ui menu">
+      <div class="ui menu item" onclick="$('.ui.modal').modal('show')">
+                <a style="font-size:large">Create New Profile <i class="plus icon"></i> </a>
+      </div>
     </div>
-  </div>
   </div>
 {% endblock %}
 
@@ -39,23 +39,48 @@ Element Sorter - Profile
         </tr>
       {% endfor %}
     {% else %}
-      <div class="ui warning message">No profiles are currently in the database. To create new profiles use the link in the
-        left sidebar.
+      <div class="ui warning message">No profiles are currently in the database. To create new profiles use the link in
+        the left sidebar.
       </div>
     {% endif %}
     </tbody>
     </table>
+    </div>
   </div>
+  <div class="ui fullscreen modal">
+    <div class="ui segment" style="margin: 2rem">
+      <div class="ui horizontal divider">Select a network</div>
+      <table id="id_network_table" class="display">
+        <thead>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Number of Unique Blocks</th>
+        </tr>
+        </thead>
+        <tbody>
+          {% for network in networks %}
+            <tr onclick="location.href='{% url 'profile_create' network.id %}'">
+              <td>{{ network.name }}</td>
+              <td>{{ network.description }}</td>
+              <td>{{ network.block_count }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
   </div>
 {% endblock %}
 
 {% block additional_js %}
   <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
   <script>
-    $(document).ready(function () {
-        $('#profile_table').DataTable();
-        $("#profile_item").addClass("active");
-    });
+      $(document).ready(function () {
+          $('#profile_table').DataTable();
+          $("#profile_item").addClass("active");
+      });
+      $("#id_network_table").DataTable();
+      $(".ui.modal").modal();
   </script>
 
 {% endblock %}

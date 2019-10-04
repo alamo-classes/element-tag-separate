@@ -36,6 +36,7 @@ class StreamingOutput(object):
 
 
 class StreamingHandler(server.BaseHTTPRequestHandler):
+    # TODO: Get rid of non mjpg links
     def do_GET(self):
         if self.path == '/':
             self.send_response(301)
