@@ -44,10 +44,10 @@ class DetectionThread(Thread):
 
             # Send request for Tensor Flow server to begin processing. Wait for response.
             if self.sorting:
-                position = requests.get(url="{}{}/{}/".format(self.url, "detection_sorting_alert", self.label))
+                position = requests.get(url="{}{}/{}/".format(self.url, "detection_sorting", self.label))
                 position = position.json()
             else:
-                requests.get(url="{}{}/{}/".format(self.url, "detection_training_alert", self.label))
+                requests.get(url="{}{}/{}/".format(self.url, "detection_training", self.label))
 
             # Determine if this is training or sorting mode
             if self.sorting:
