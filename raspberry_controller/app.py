@@ -26,7 +26,7 @@ class DetectionThread(Thread):
         self.sorting = sorting
         self.label = label
         self.arduino_serial = serial.Serial("/dev/ttyACM0", 9600, timeout=5)  # TODO: See if timeout should be lower
-        self.url = "{}:8000/capture/detection_training/".format(origin)
+        self.url = "{}:8000/capture/".format(origin)
 
     def run(self):
         sleep(5)
@@ -44,10 +44,10 @@ class DetectionThread(Thread):
 
             # Send request for Tensor Flow server to begin processing. Wait for response.
             if self.sorting:
-                position = requests.get(url=self.url + "detection_sorting_alert")
+                position = requests.get(url="{}{}/{}/".format(self.url, "detection_sorting_alert", self.label))
+                position = position.json()
             else:
-                position = requests.get(url=self.url + "detection_training_alert")
-            position = position.json()
+                requests.get(url="{}{}/{}/".format(self.url, "detection_training_alert", self.label))
 
             # Determine if this is training or sorting mode
             if self.sorting:

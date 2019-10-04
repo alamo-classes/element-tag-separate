@@ -1,11 +1,9 @@
-import glob
 import os
-import io
-import time
+from time import time
 from urllib import request
-
-from PIL import Image
-from django.http import HttpResponseRedirect, HttpResponse
+import numpy as np
+import cv2
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views import View
 from rest_framework import status
@@ -56,19 +54,30 @@ class CaptureLabeledImages:
     """Using the passed label, capture an image and place it in the appropriate directory"""
     def __init__(self, label):
         self.label = label
+        self.artifact_dir = os.path.join("artifacts/dataset/", self.label)
+        self.file_path = os.path.join(self.artifact_dir, "{}_{}.jpg".format(self.label, int(time())))
 
     def capture_image(self):
         """ Take a snapshot of the part and save it to the artifacts directory and database"""
         # Make directory (if needed) for part photos
-        artifact_dir = os.path.join("../artifacts/", self.label)
-        os.makedirs(artifact_dir, exist_ok=True)
+        os.makedirs(self.artifact_dir, exist_ok=True)
+
         # Get settings file
         settings = ElementSettings.objects.first()
+
         # Increment the count of photos
         block = BlockCatalog.objects.get(part_number=self.label)
         block.photo_count = block.photo_count + 1
+
         # Take snapshot and save to a file
-        file = io.BytesIO(request.urlopen("{}:5000/snapshot".format(settings.rpi_id_addr)).read())
-        img = Image.open(file)
-        # Use (label)_(UTC_time).jpg as file format
-        img.save(os.path.join(artifact_dir, "dataset/", "{}_{}.jpg".format(self.label, str(int(time.time())))))
+        snapshot_request = request.urlopen("http://{}:5001/stream.mjpg".format(settings.rpi_id_addr))
+        frame = snapshot_request.read(100000)
+
+        # JPEG data if found between these two byte indexes
+        a = frame.find(b"\xff\xd8")
+        b = frame.find(b"\xff\xd9")
+        if a != -1 and b != -1:
+            jpg_bytes = frame[a:b+2]
+            frame = frame[b+2]
+            image = cv2.imdecode(np.fromstring(jpg_bytes, dtype=np.uint8), cv2.IMREAD_COLOR)
+            cv2.imwrite(self.file_path, image)
