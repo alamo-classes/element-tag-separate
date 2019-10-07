@@ -11,9 +11,15 @@
 {% block sidebar %}
   <div class="four wide column" style="margin-left: 2rem">
     <div class="ui menu">
-      <div class="ui menu item" onclick="$('.ui.modal').modal('show')">
+      {% if networks %}
+      <div class="ui menu item" onclick="$('.ui.modal').modal('show')" style="cursor: pointer">
                 <a style="font-size:large">Create New Profile <i class="plus icon"></i> </a>
       </div>
+      {% else %}
+        <div class="ui menu item" style="color: gray; font-size: large">
+          A trained network is needed to construct a new profile
+        </div>
+      {% endif %}
     </div>
   </div>
 {% endblock %}
@@ -60,10 +66,10 @@
         </thead>
         <tbody>
           {% for network in networks %}
-            <tr onclick="location.href='{% url 'profile_create' network.id %}'">
+            <tr onclick="location.href='{% url 'profile_create' network.id %}'" style="cursor: pointer">
               <td>{{ network.name }}</td>
               <td>{{ network.description }}</td>
-              <td>{{ network.block_count }}</td>
+              <td>{{ network.blocks.all.count }}</td>
             </tr>
         {% endfor %}
         </tbody>

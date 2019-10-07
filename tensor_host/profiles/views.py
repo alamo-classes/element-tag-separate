@@ -16,7 +16,7 @@ class Profile(View):
     @staticmethod
     def get(request):
         profiles = ProfileCatalog.objects.all()
-        networks = NeuralNets.objects.all()
+        networks = NeuralNets.objects.filter(training_status=True)
         return render(request, 'profiles/profile.html', {'profiles': profiles, 'networks': networks})
 
     def post(self, request):
@@ -46,6 +46,8 @@ class ProfileEditForm(View):
     def post(request, profile_id):
         pass
 
+
+# TODO: This should move to sorting application
 @api_view(['GET'])
 def detection_sorting_alert(request):
     msg = json.dumps({'status': status.HTTP_200_OK})

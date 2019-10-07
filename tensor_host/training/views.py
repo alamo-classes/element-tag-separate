@@ -18,7 +18,7 @@ class Train(View):
         update_block_count(blocks)
         training_flag = blocks.filter(training_valid=True).count() >= 2
         networks = NeuralNets.objects.all()
-        self.update_network_unique_count(networks)
+        networks = check_networks(networks)
         return render(request, 'training/training.html', {'training_flag': training_flag, "networks": networks})
 
     @staticmethod
@@ -27,11 +27,6 @@ class Train(View):
         network_id = request.POST.get("network_id")
         NeuralNets.objects.get(id=network_id).delete()
         return HttpResponseRedirect('/training')
-
-    @staticmethod
-    def update_network_unique_count(networks):
-        for network in networks:
-            network.block_count = network.blocks.count()
 
 
 class TrainingForm(View):
@@ -83,3 +78,11 @@ def train_network(network):
     with open(path.join(network_dir, "training_log.txt"), "w") as out, \
             open(path.join(network_dir, "error_log.txt"), "w") as err:
         subprocess.Popen(command, cwd=network_dir, stdout=out, stderr=err)
+
+
+def check_networks(networks):
+    for network in networks:
+        if path.isfile(path.join(getcwd(), "artifacts/networks", network.name, "trained_model/retrained_graph.pb")):
+            network.training_status = True
+            network.save()
+    return networks

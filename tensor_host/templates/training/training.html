@@ -45,7 +45,7 @@
               </form>
             {% if network.training_status %}
               <td style="text-align: center">
-                <i class="ui green large check icon" data-tooltip=""></i>
+                <i class="ui green large check icon"></i>
               </td>
               {% else %}
               <td style="text-align: center" data-tooltip="Still training network. Please refresh after network has been trained.">
@@ -54,7 +54,7 @@
             {% endif %}
             <td class="sorting_1" style="text-align: center">{{ network.name }}</td>
             <td style="text-align: center">{{ network.description }}</td>
-            <td style="text-align: center">{{ network.block_count }}</td>
+            <td style="text-align: center">{{ network.blocks.all.count }}</td>
           </tr>
         {% endfor %}
         </tbody>
