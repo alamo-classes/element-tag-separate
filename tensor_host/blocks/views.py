@@ -8,6 +8,7 @@ from blocks.models import BlockCatalog, BlockForm
 
 
 class Blocks(View):
+    """ View for /blocks/ """
     @staticmethod
     def get(request):
         blocks = BlockCatalog.objects.all()
@@ -16,6 +17,7 @@ class Blocks(View):
 
 
 class BlockProfile(View):
+    """ View for /blocks/form/ """
     @staticmethod
     def get(request):
         form = BlockForm()
@@ -32,6 +34,7 @@ class BlockProfile(View):
 
 
 class BlockProfileEdit(View):
+    """ View for /blocks/form/ """
     @staticmethod
     def get(request, part_number):
         part = BlockCatalog.objects.get(part_number=part_number)

@@ -13,6 +13,7 @@ from training.models import NeuralNets
 
 
 class Profile(View):
+    """ View for /profile/ """
     @staticmethod
     def get(request):
         profiles = ProfileCatalog.objects.all()
@@ -24,6 +25,7 @@ class Profile(View):
 
 
 class ProfileCreateForm(View):
+    """ View for /profile/form/ """
     @staticmethod
     def get(request, network_id):
         form = ProfileForm()
@@ -41,18 +43,6 @@ class ProfileCreateForm(View):
             return HttpResponseRedirect('/profiles/')
         else:
             return render(request, 'profiles/profile_form.html', {'form': form, 'network': network})
-
-
-class ProfileEditForm(View):
-    @staticmethod
-    def get(request, profile_id):
-        profile = ProfileCatalog.objects.get(id=profile_id)
-        form = ProfileForm(instance=profile)
-        return render(request, 'profiles/profile_form.html', {'form': form, 'profile': profile})
-
-    @staticmethod
-    def post(request, profile_id):
-        pass
 
 
 # TODO: This should move to sorting application

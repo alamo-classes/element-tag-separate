@@ -1,3 +1,4 @@
+""" Model containing all settings information """
 from django.db import models
 from django import forms
 
@@ -9,6 +10,7 @@ class ElementSettings(models.Model):
 
 
 class ElementSettingForm(forms.ModelForm):
+    """ Form to construct the new setting """
     class Meta:
         model = ElementSettings
         verbose_name = "Form for Project-wide Setting"

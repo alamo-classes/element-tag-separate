@@ -1,3 +1,4 @@
+""" URL Resolution for sorting application """
 from django.urls import path
 from sorting.views import Sorting
 

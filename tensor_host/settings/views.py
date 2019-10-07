@@ -6,10 +6,12 @@ from settings.models import ElementSettingForm, ElementSettings
 
 
 def index(request):
+    """ View for / (landing page) """
     return render(request, 'settings/index.html')
 
 
 class SettingForm(View):
+    """ View for /settings/ """
     @staticmethod
     def get(request):
         setting_instance = ElementSettings.objects.first()

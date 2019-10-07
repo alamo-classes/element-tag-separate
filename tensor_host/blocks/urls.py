@@ -1,3 +1,4 @@
+""" URL Resolution for block application """
 from django.urls import path
 
 from blocks.views import BlockProfileEdit
