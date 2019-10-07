@@ -1,11 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Apr 26 07:16:04 2018
-
-@author: raghav prabhu
-Re-modified TensorFlow classification file according to our need.
-"""
 import tensorflow as tf
 import sys
 import os

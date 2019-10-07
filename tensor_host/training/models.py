@@ -13,7 +13,7 @@ class NeuralNets(models.Model):
     description = models.CharField(max_length=256, null=True, blank=True)
     blocks = models.ManyToManyField(BlockCatalog)
     block_count = models.IntegerField(default=0)
-    training_status = models.BooleanField(default=0)
+    training_status = models.BooleanField(default=False)
     training_time_start = models.DateTimeField()
     training_time_total = models.TimeField(null=True, blank=True)
 
@@ -21,9 +21,6 @@ class NeuralNets(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
-        # If initial save, calculate the number of blocks used.
-        if not self.block_count:
-            self.block_count = self.blocks.count()
         # If initial save set the initial time that training began.
         # If consequent save set the total time that training ran.
         if self.training_time_start:

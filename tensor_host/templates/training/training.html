@@ -29,6 +29,7 @@
       <table id="network_table" class="display" style="width:100%;" role="grid">
         <thead>
           <tr role="row">
+            <th></th>
             <th class="sorting_asc">Training Status</th>
             <th>Network Name</th>
             <th>Description</th>
@@ -38,6 +39,10 @@
         <tbody>
         {% for network in networks %}
           <tr role="row">
+              <form method="post" action={{ action }}>
+                {% csrf_token %}
+                <td><button class="ui tiny red button" name="network_id" value="{{ network.id }}">Delete</button></td>
+              </form>
             {% if network.training_status %}
               <td style="text-align: center">
                 <i class="ui green large check icon" data-tooltip=""></i>

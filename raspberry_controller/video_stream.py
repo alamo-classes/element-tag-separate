@@ -81,8 +81,7 @@ class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
     daemon_threads = True
 
 
-# TODO: Check this out: https://picamera.readthedocs.io/en/release-1.12/fov.html?highlight=sensor%20mode
-with picamera.PiCamera(resolution='640x480', framerate=24) as camera:
+with picamera.PiCamera(sensor_mode=5) as camera:
     output = StreamingOutput()
     # Uncomment the next line to change your Pi's Camera rotation (in degrees)
     camera.start_recording(output, format='mjpeg')

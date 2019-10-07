@@ -1304,4 +1304,8 @@ if __name__ == '__main__':
       for more information on Mobilenet.\
       """)
     FLAGS, unparsed = parser.parse_known_args()
+    sys.stdout.write("\nFlags:")
+    sys.stdout.write(FLAGS.__str__())
+    sys.stdout.write("\nUnparsed:")
+    sys.stdout.write(unparsed.__str__())
     tf.app.run(main=main, argv=[sys.argv[0]] + unparsed)

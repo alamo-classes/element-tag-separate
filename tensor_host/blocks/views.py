@@ -1,4 +1,4 @@
-from os import path, listdir
+from os import path, listdir, getcwd
 
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
@@ -55,8 +55,9 @@ def update_block_count(blocks):
     If the number of photos is over the the required threshold,
     :param blocks: Query set of blocks to have their photo count updated
     """
+    # TODO: image count should be minimum 200?
     for block in blocks:
-        block_artifact_directory = path.join("artifacts", str(block.part_number))
+        block_artifact_directory = path.join(getcwd(), "artifacts/dataset/", str(block.part_number))
         if path.exists(block_artifact_directory):
             block.photo_count = len([file for file in listdir(block_artifact_directory)])
             if block.photo_count > 1:
