@@ -20,7 +20,7 @@
           </div>
           <div class="field">
             <label for="id_blocks">Blocks</label>
-            <select class="ui dropdown" id="id_blocks" name="blocks" required multiple>
+            <select class="ui search dropdown" id="id_blocks" name="blocks" required multiple>
               <option value="">Select Blocks to Include</option>
               {% for block in blocks %}
                 <option value="{{ block.part_number }}">{{ block.part_number }}: {{ block.color_wording }} | {{ block.category }} | {{ block.description }}</option>

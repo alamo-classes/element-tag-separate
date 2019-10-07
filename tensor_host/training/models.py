@@ -3,7 +3,6 @@ import uuid
 from django.core.exceptions import ValidationError
 from django.db import models
 from django import forms
-from django.utils.datetime_safe import datetime
 
 from blocks.models import BlockCatalog
 
