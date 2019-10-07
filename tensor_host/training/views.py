@@ -12,7 +12,7 @@ from training.models import *
 
 
 class Train(View):
-
+    """ View for /training/ """
     def get(self, request):
         blocks = BlockCatalog.objects.all()
         update_block_count(blocks)
@@ -30,6 +30,7 @@ class Train(View):
 
 
 class TrainingForm(View):
+    """ View for /training/training_form/ """
     @staticmethod
     def get(request):
         form = NeuralNetsForm()
@@ -80,6 +81,7 @@ def train_network(network):
 
 
 def check_networks(networks):
+    """ Check if the *.pb file has been generated for each defined neural networks. """
     for network in networks:
         if path.isfile(path.join(getcwd(), "artifacts/networks", network.name, "trained_model/retrained_graph.pb")):
             network.training_status = True
