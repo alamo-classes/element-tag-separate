@@ -1,5 +1,6 @@
 import uuid
 
+from django.core.exceptions import ValidationError
 from django.db import models
 from django import forms
 from django.utils.datetime_safe import datetime
@@ -22,6 +23,12 @@ class NeuralNets(models.Model):
 
 
 class NeuralNetsForm(forms.ModelForm):
+    def clean_blocks(self):
+        blocks = self.cleaned_data['blocks']
+        if blocks.count() < 2:
+            raise ValidationError("At least 2 blocks must be chosen to train the network")
+        return blocks
+
     class Meta:
         model = NeuralNets
         verbose_name = "Catalog of all Neural Networks"

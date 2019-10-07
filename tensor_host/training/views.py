@@ -39,7 +39,6 @@ class TrainingForm(View):
     @staticmethod
     def post(request):
         form = NeuralNetsForm(request.POST)
-        # TODO: Need to add validation that at least two different blocks were chosen
         if form.is_valid():
             network = form.save()
             train_network(network)

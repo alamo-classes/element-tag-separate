@@ -21,7 +21,7 @@
 {% block body %}
   <div class="ten wide stretched column">
     <center class="ui top attached inverted segment" style="height: 650px">
-      <div class="ui 4:3 embed" data-url="http://{{ settings.rpi_id_addr }}:5001/stream.mjpg"></div>
+      <img src="http://{{ settings.rpi_id_addr }}:5001/stream.mjpg" width="1150" height="620">
     </center>
     <div class="ui bottom attached inverted segment">
       <div class="ui warning message">To start training, select a block and click run.</div>
@@ -80,7 +80,7 @@
           if (selection_dropdown !== "") {
               $.ajax({
                   type: "GET",
-                  url: "http://192.168.0.11:5000/detection_training", //TODO: Use template insertion from settings for IP address
+                  url: "http://{{settings.raspberry_id_addr}}/detection_training",
                   data: {"label":selection_dropdown},
                   success: (function (data) {
                       console.log(data)
@@ -93,7 +93,6 @@
 
           //  $.active_run = true;
           // while (active_run) {
-          //    setTimeout(image_poll(), 1);
           //    setTimeout(logging_poll(), 1);
           //}
       });
@@ -102,15 +101,15 @@
           // Send command to the Raspberry Pi to stop the detection loop after next cycle
           $.ajax({
               type: "GET",
-              url: "http://192.168.0.11:5000/stop_detection", //TODO: Use template insertion from settings for IP address
+              url: "http://{{settings.raspberry_id_addr}}/stop_detection",
               success: (function (data) {
                   console.log(data);
+                  //$.active_run = false;
               }),
               error: (function (error) {
                   console.log(error);
               })
           });
-          // TODO: Make the stop button have a loading icon and indicate that the stop is beginning
       });
   </script>
 {% endblock %}
