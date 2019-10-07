@@ -61,6 +61,7 @@ def train_network(network):
     # Copy image directories of affected blocks to the new dataset directory
     for block in network.blocks.all():
         block_src = path.join(getcwd(), "artifacts", "dataset", str(block.part_number))
+        # TODO: Look into using the symlink
         copytree(block_src, path.join(network_dataset_dir, str(block.part_number)))
 
     mkdir(path.join(network_dir, "trained_model"))

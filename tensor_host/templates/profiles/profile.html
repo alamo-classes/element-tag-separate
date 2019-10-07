@@ -39,9 +39,9 @@
       <tbody>
       {% for profile in profiles %}
         <tr role="row">
-          <td class="sorting_1" tabindex="0"><a href="{% url 'profile_edit' profile.id %}">{{ profile.name }}</a></td>
-          <td>{{ profile.tags }}</td>
-          <td>{{ profile.blocks }}</td>
+          <td class="sorting_1" tabindex="0" style="text-align: center">{{ profile.name }}</td>
+          <td style="text-align: center">{{ profile.description }}</td>
+          <td style="text-align: center">{{ profile.network }}</td>
         </tr>
       {% endfor %}
     {% else %}
