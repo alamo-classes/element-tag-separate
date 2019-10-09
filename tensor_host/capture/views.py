@@ -62,6 +62,5 @@ class CaptureLabeledImages:
         b = frame.find(b"\xff\xd9")
         if a != -1 and b != -1:
             jpg_bytes = frame[a:b+2]
-            frame = frame[b+2]
             image = cv2.imdecode(np.fromstring(jpg_bytes, dtype=np.uint8), cv2.IMREAD_COLOR)
             cv2.imwrite(self.file_path, image)

@@ -21,7 +21,8 @@
 {% block body %}
   <div class="ten wide stretched column">
     <center class="ui top attached inverted segment" style="height: 650px">
-      <img src="http://{{ settings.rpi_id_addr }}:5001/stream.mjpg" width="1150" height="620">
+      <img src="http://{{ settings.rpi_id_addr }}:5001/stream.mjpg" width="1150" height="620"
+           alt="Please start camera server(s)">
     </center>
     <div class="ui bottom attached inverted segment">
       <div class="ui warning message">To start training, select a block and click run.</div>

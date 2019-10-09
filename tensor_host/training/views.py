@@ -70,7 +70,7 @@ def train_network(network):
     bottleneck_dir = "bottleneck/"
     training_steps = 500
     output_graph = "trained_model/retrained_graph.pb"
-    output_labels = "trained_model/retrained_lables.txt"
+    output_labels = "trained_model/retrained_labels.txt"
     exe_path = path.join(getcwd(), "venv/bin/python")
     py_path = path.join(getcwd(), "training/train.py")
     command = [exe_path, py_path, "--image_dir={}".format(image_dir), "--bottleneck_dir={}".format(bottleneck_dir),

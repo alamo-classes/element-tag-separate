@@ -1,13 +1,7 @@
-import json
-
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
 from django.views import View
-from rest_framework import status
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-
 from profiles.models import ProfileCatalog, ProfileForm
 from training.models import NeuralNets
 
@@ -43,10 +37,3 @@ class ProfileCreateForm(View):
             return HttpResponseRedirect('/profiles/')
         else:
             return render(request, 'profiles/profile_form.html', {'form': form, 'network': network})
-
-
-# TODO: This should move to sorting application
-@api_view(['GET'])
-def detection_sorting_alert(request):
-    msg = json.dumps({'status': status.HTTP_200_OK})
-    return Response(msg)
