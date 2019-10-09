@@ -22,6 +22,7 @@ class Capture(View):
         settings = ElementSettings.objects.first()
         if not settings:
             return HttpResponseRedirect("/settings/")
+        print(settings.rpi_id_addr)
         return render(request, 'capture/capture.html', {'blocks': blocks, 'settings': settings})
 
 

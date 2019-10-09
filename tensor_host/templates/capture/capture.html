@@ -81,7 +81,7 @@
           if (selection_dropdown !== "") {
               $.ajax({
                   type: "GET",
-                  url: "http://{{settings.raspberry_id_addr}}/detection_training",
+                  url: "http://{{settings.rpi_id_addr}}:5000/detection_training",
                   data: {"label":selection_dropdown},
                   success: (function (data) {
                       console.log(data)
@@ -102,7 +102,7 @@
           // Send command to the Raspberry Pi to stop the detection loop after next cycle
           $.ajax({
               type: "GET",
-              url: "http://{{settings.raspberry_id_addr}}/stop_detection",
+              url: "http://{{settings.rpi_id_addr}}/stop_detection",
               success: (function (data) {
                   console.log(data);
                   //$.active_run = false;
