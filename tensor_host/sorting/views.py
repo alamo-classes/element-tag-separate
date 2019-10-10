@@ -86,7 +86,9 @@ def detection_sorting_alert(request, profile_id):
     top_score_label = max(header_scores.items(), key=operator.itemgetter(1))[0]
 
     # Get bin position based on label (if score is above percentage threshold)
-    if header_scores[top_score_label] >= settings.tolerance:
+    # TODO: Reenable after zoned in the cameras
+    # if header_scores[top_score_label] >= settings.tolerance:
+    if True:
         # Check each bin number for the part number label
         if profile.bin_1.all().filter(part_number=top_score_label).exists():
             position = 1

@@ -103,7 +103,7 @@
           // Send command to the Raspberry Pi to stop the detection loop after next cycle
           $.ajax({
               type: "GET",
-              url: "http://{{settings.rpi_id_addr}}/stop_detection",
+              url: "http://{{settings.rpi_id_addr}}:5000/stop_detection",
               success: (function (data) {
                   console.log(data);
                   //$.active_run = false;
