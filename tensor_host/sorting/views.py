@@ -1,6 +1,6 @@
 import json
 import operator
-from os import mkdir, getcwd, path
+from os import mkdir, getcwd, path, makedirs
 from time import time
 from urllib.request import urlopen
 import tensorflow as tf
@@ -35,8 +35,7 @@ def detection_sorting_alert(request, profile_id):
 
     # Create directory to store the snapshot
     network_dir = path.join(getcwd(), "artifacts/networks", network.name)
-    if not path.isdir(network_dir):
-        mkdir(path.join(network_dir, 'testing'))
+    makedirs(path.join(network_dir, 'testing'), exist_ok=True)
     test_file = path.join(network_dir, "testing/{}.jpg".format(str(int(time()))))
 
     snapshot_request = urlopen("http://{}:5001/stream.mjpg".format(settings.rpi_id_addr))

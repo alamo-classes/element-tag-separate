@@ -130,27 +130,27 @@ void loop() {
                 // While errorAngle is out of range move the servo
                 break;
             case '2': // Move block to bin #1
-                sorter_servo_angle = 45;
+                sorter_servo_angle = 345;
                 // While errorAngle is out of range move the servo
                 break;
             case '3': // Move block to bin #1
-                sorter_servo_angle = 90;
+                sorter_servo_angle = 305;
                 // While errorAngle is out of range move the servo
                 break;
             case '4': // Move block to bin #1
-                sorter_servo_angle = 135;
+                sorter_servo_angle = 280;
                 // While errorAngle is out of range move the servo
                 break;
             case '5': // Move block to bin #1
-                sorter_servo_angle = 180;
+                sorter_servo_angle = 240;
                 // While errorAngle is out of range move the servo
                 break;
             case '6': // Move block to bin #1
-                sorter_servo_angle = 200;
+                sorter_servo_angle = 190;
                 // While errorAngle is out of range move the servo
                 break;
             case '7': // Move block to bin #1
-                sorter_servo_angle = 320;
+                sorter_servo_angle = 60;
                 // While errorAngle is out of range move the servo
                 break;
             default:

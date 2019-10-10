@@ -1,6 +1,6 @@
 #!flask/bin/python
 import sys
-from threading import Thread, Event
+from threading import Thread
 from time import sleep
 
 import json
@@ -50,11 +50,12 @@ def arduino(url):
                 arduino_serial.write(bytes(position.text, 'UTF-8'))
                 # Sleep 2 seconds and then continue loop
                 sleep(2)
-                arduino_serial.write(bytes('a', 'UTF-8'))
             # Send request for Tensor Flow to capture an image for processing
             else:
                 requests.get(url="http://{}/capture/detection_training/{}/".format(url, label))
                 print("New photo captured for label: {}".format(label))
+
+            if not start_event:
                 arduino_serial.write(bytes('a', 'UTF-8'))
 
 
