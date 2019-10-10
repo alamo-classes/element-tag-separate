@@ -30,7 +30,7 @@
         <div class="field">
           <label for="block_dropdown">Block</label>
           <select id="block_dropdown" class="ui fluid dropdown">
-            <option value="">Select an option</option>
+            <option value="">Select an Block</option>
             {% for block in blocks %}
               <option value="{{ block.part_number }}">#{{ block.part_number }} [{{ block.color_wording }}]
                 -- {{ block.description }}</option>
@@ -52,6 +52,7 @@
           $("#capture_item").addClass("active")
       });
       $(".ui.embed").embed();
+      $(".ui.dropdown").dropdown();
       let active_run = false;
 
       function image_poll() {
@@ -64,20 +65,20 @@
           });
       }
 
-      function logging_poll() {
-          $.ajax({
-              type: "GET",
-              url: `${document.location.origin}/logging_poll`,
-              success: function (data) {
-                  console.log(data)
-                  // TODO: Update the logging segment
-              }
-          })
-      }
+      //function logging_poll() {
+      //    $.ajax({
+      //        type: "GET",
+      //        url: `${document.location.origin}/logging_poll`,
+      //        success: function (data) {
+      //            console.log(data)
+      //            // TODO: Update the logging segment
+      //        }
+      //    })
+      //}
 
       $('.fluid.green.button').on('click', function () {
           // Send the initial command to the Raspberry Pi to start the detection loop
-          let selection_dropdown = $(".ui.fluid.dropdown").val();
+          let selection_dropdown = $(".ui.fluid.dropdown").dropdown('get value');
           if (selection_dropdown !== "") {
               $.ajax({
                   type: "GET",

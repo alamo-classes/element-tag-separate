@@ -25,36 +25,42 @@ class DetectionThread(Thread):
         self.stop_event = stop_event
         self.sorting = sorting
         self.label = label
-        self.arduino_serial = serial.Serial("/dev/ttyACM0", 9600, timeout=5)  # TODO: See if timeout should be lower
-        self.url = "{}:8000/capture/".format(origin)
+        self.arduino_serial = serial.Serial("/dev/ttyACM0", 9600, timeout=5)
+        self.url = origin
 
     def run(self):
-        sleep(5)
+        print("Starting thread with label: {}".format(self.label), file=sys.stderr)
+        # Begin first stage of detection. Send command to start detection loop to arduino.
+        self.arduino_serial.write(bytes('a', 'UTF-8'))
+        print("Starting arduino servos. Entering detection mode...", file=sys.stderr)
         while not self.stop_event.is_set():
-            sleep(5)
-            # Begin first stage of detection. Send command to start detection loop to arduino.
-            self.arduino_serial.write(bytes('a', 'UTF-8'))
-
             # Wait for the IR detection to trigger
             detected = False
             while not detected:
-                log = self.arduino_serial.readline().decode()
-                if "Detected" in log:
+                try:
+                    log = self.arduino_serial.readline().decode()
+                    if "Detected" in log:
+                        print("Detection alert triggered", file=sys.stderr)
+                        detected = True
+                except serial.SerialException:
+                    print("Serial Exception found", file=sys.stderr)
+                    # TODO: Look into disabling GETTY after demo
+                    self.arduino_serial.flush()
                     detected = True
 
-            # Send request for Tensor Flow server to begin processing. Wait for response.
+            # Send request for Tensor Flow server to get sorting . Wait for response.
             if self.sorting:
-                position = requests.get(url="{}{}/{}/".format(self.url, "detection_sorting", self.label))
-                position = position.json()
-            else:
-                requests.get(url="{}{}/{}/".format(self.url, "detection_training", self.label))
-
-            # Determine if this is training or sorting mode
-            if self.sorting:
+                position = requests.get(url="{}{}/".format(self.url, self.label))
                 # Send part through sorter in training position
-                self.arduino_serial.write(bytes(position, 'UTF-8'))
+                print("Sorting received position #{}".format(position.text), file=sys.stderr)
+                self.arduino_serial.write(bytes(position.text, 'UTF-8'))
                 # Sleep 2 seconds and then continue loop
                 sleep(2)
+                self.arduino_serial.write(bytes('a', 'UTF-8'))
+            # Send request for Tensor Flow to capture an image for processing
+            elif not self.sorting and not self.stop_event.is_set:
+                requests.get(url="{}{}/".format(self.url, self.label))
+                self.arduino_serial.write(bytes)
 
 
 @app.route('/')
@@ -66,17 +72,22 @@ def index():
 def detection_training():
     """ Start the training detection loop """
     label = request.args.get("label")
-    origin = "http://192.168.0.12"
-    STOP_EVENT.clear()
+    origin = "http://192.168.0.12:8000/capture/detection_training"
     thread = DetectionThread(STOP_EVENT, sorting=False, label=label, origin=origin)
     thread.daemon = True
     thread.start()
+    STOP_EVENT.clear()
     return json.dumps({'success': True}), 200
 
 
 @app.route('/detection_sorting')
 def detection_sorting():
     """ Start the sorting detection loop """
+    label = request.args.get("profile")
+    origin = "http://192.168.0.12:8000/sorting/detection_sorting/"
+    thread = DetectionThread(STOP_EVENT, sorting=True, label=label, origin=origin)
+    thread.daemon = True
+    thread.start()
     STOP_EVENT.clear()
     return "Detection loop started for sorting. Beginning detection loop", 200
 

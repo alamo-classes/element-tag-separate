@@ -35,7 +35,8 @@ def detection_sorting_alert(request, profile_id):
 
     # Create directory to store the snapshot
     network_dir = path.join(getcwd(), "artifacts/networks", network.name)
-    mkdir(path.join(network_dir, 'testing'))
+    if not path.isdir(network_dir):
+        mkdir(path.join(network_dir, 'testing'))
     test_file = path.join(network_dir, "testing/{}.jpg".format(str(int(time()))))
 
     snapshot_request = urlopen("http://{}:5001/stream.mjpg".format(settings.rpi_id_addr))
@@ -104,7 +105,6 @@ def detection_sorting_alert(request, profile_id):
     else:
         # Set bin to 0 position if threshold is not met
         position = 0
-
+    print("Position: {}".format(position))
     # Return status message with position
-    msg = json.dumps({'status': status.HTTP_200_OK, 'data': position})
-    return Response(msg)
+    return Response(position, status=status.HTTP_200_OK)
