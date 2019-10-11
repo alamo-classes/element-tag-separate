@@ -38,8 +38,7 @@ int MAX_PULSE_SPEED_OFFSET_US = 40;     // Going Clockwise  a bit - can be bigge
 int HOLD_STILL_PULSE_SPEED_US = 1500;   // HOLD_STILL is for keeping the servo in place (no movement, don't change)
 int ANGLE_Q2_MIN = 90;
 int ANGLE_Q3_MAX = 270;
-char sorter_servo_pos = "1";
-int sorter_servo_angle = 180;
+int sorter_servo_angle = 0;
 int currentAngle = 0;                   // The angle the servo is at
 int prevAngle = 0;                      // The last angle the servo had
 int errorAngle = 0;                     // How off we are from the target angle
@@ -126,12 +125,36 @@ void loop() {
             case 'b': // Move part off of belt
                 move_camera_belt();
                 break;
-            case '1': // Move block to position #1
+            case '1': // Move block to bin #1
                 sorter_servo_angle = 0;
                 // While errorAngle is out of range move the servo
                 break;
+            case '2': // Move block to bin #1
+                sorter_servo_angle = 345;
+                // While errorAngle is out of range move the servo
+                break;
+            case '3': // Move block to bin #1
+                sorter_servo_angle = 305;
+                // While errorAngle is out of range move the servo
+                break;
+            case '4': // Move block to bin #1
+                sorter_servo_angle = 280;
+                // While errorAngle is out of range move the servo
+                break;
+            case '5': // Move block to bin #1
+                sorter_servo_angle = 240;
+                // While errorAngle is out of range move the servo
+                break;
+            case '6': // Move block to bin #1
+                sorter_servo_angle = 190;
+                // While errorAngle is out of range move the servo
+                break;
+            case '7': // Move block to bin #1
+                sorter_servo_angle = 60;
+                // While errorAngle is out of range move the servo
+                break;
             default:
-                Serial.println("Unknown command detected");
+                Serial.println("Unknown command");
                 break;
         }
     }

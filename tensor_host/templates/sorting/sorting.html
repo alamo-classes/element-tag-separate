@@ -20,9 +20,10 @@
 
 {% block body %}
   <div class="ten wide stretched column">
-    <div class="ui top attached inverted segment">
-      <img src="http://{{ settings.rpi_id_addr }}:5001/stream.mjpg" width="1150" height="620">
-    </div>
+    <center class="ui top attached inverted segment">
+      <img src="http://{{ settings.rpi_id_addr }}:5001/stream.mjpg" width="1150" height="620"
+           alt="Please start camera server(s)">
+    </center>
     <div class="ui bottom attached inverted segment">
       <div class="ui warning message">To start sorting, select a block and click run.</div>
       <form class="ui inverted form">
@@ -53,5 +54,39 @@
           $("#monitor_item").addClass("active")
       });
       $('.ui.embed').embed({autoplay: true});
+      $('.ui.dropdown').dropdown();
+      $('.fluid.green.button').on('click', function() {
+          console.log("Clicked");
+          // Send the initial command to the Raspberry Pi to start the detection loop
+          let selection_dropdown = $(".ui.dropdown").dropdown('get value');
+          console.log(`Val: ${selection_dropdown}`);
+          if (selection_dropdown !== "") {
+              $.ajax({
+                  type: "GET",
+                  url: "http://{{ settings.rpi_id_addr }}:5000/detection_sorting",
+                  data: {"profile": selection_dropdown},
+                  success: (function (data){
+                      console.log(data)
+                  }),
+                  error: (function (error){
+                      console.log(error);
+                  })
+              })
+          }
+      });
+      $('.fluid.red.button').on('click', function () {
+          // Send command to the Raspberry Pi to stop the detection loop after next cycle
+          $.ajax({
+              type: "GET",
+              url: "http://{{settings.rpi_id_addr}}:5000/stop_detection",
+              success: (function (data) {
+                  console.log(data);
+                  //$.active_run = false;
+              }),
+              error: (function (error) {
+                  console.log(error);
+              })
+          });
+      });
   </script>
 {% endblock %}
