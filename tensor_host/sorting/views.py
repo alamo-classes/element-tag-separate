@@ -113,9 +113,6 @@ def detection_sorting_alert(request, profile_id):
     return Response(position, status=status.HTTP_200_OK)
 
 
-def send_logging():
+def send_logging(log_message):
     channel_layer = get_channel_layer()
-    async_to_sync(channel_layer.group_send)('broadcast', {
-        'data': 'test_message',
-        'data2': 'more_test_message'
-    })
+    async_to_sync(channel_layer.group_send)('broadcast', {'type': 'logging_event', 'data': log_message})

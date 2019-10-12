@@ -12,8 +12,7 @@
           Logger
         </h3>
       </div>
-      <div class="ui segment" style="height: 770px; overflow-y: scroll">
-      </div>
+      <div id="logging_segment" class="ui segment" style="height: 770px; overflow-y: scroll"></div>
     </div>
   </div>
 {% endblock %}
@@ -75,14 +74,13 @@
 
       socket.onmessage = function(event) {
           console.log('got something');
-          // logging(event)
+          logging(event)
       };
 
       function logging(event){
           // Get the data from the JSON post
-          console.log("Got new data");
-          let data = JSON.parse(event.data);
-          console.log(data['data']);
+          let data = `${Date().split(' ')[4]}: ${event.data}<br>`;
+          $("#logging_segment").append(data);
       }
 
       $('.fluid.green.button').on('click', function () {

@@ -15,7 +15,7 @@ class CaptureLogging(WebsocketConsumer):
         async_to_sync(self.channel_layer.group_discard)('broadcast', self.channel_name)
         print("Disconnecting")
 
-    def message_event(self, event):
+    def logging_event(self, event):
         """ Publish group message to client """
-        self.send(text_data=event['event'])
+        self.send(text_data=event['data'])
         print("Event")
