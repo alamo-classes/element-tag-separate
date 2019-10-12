@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'profiles',
     'catalog',
     'rest_framework',
+    'channels',
     'settings',
 ]
 
@@ -125,3 +126,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+ASGI_APPLICATION = "main.routing.APPLICATION"
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('127.0.0.1', 6379)]
+        }
+    }
+}

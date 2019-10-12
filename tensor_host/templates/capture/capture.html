@@ -65,16 +65,25 @@
           });
       }
 
-      //function logging_poll() {
-      //    $.ajax({
-      //        type: "GET",
-      //        url: `${document.location.origin}/logging_poll`,
-      //        success: function (data) {
-      //            console.log(data)
-      //            // TODO: Update the logging segment
-      //        }
-      //    })
-      //}
+      let socket = new WebSocket(
+          `ws://${window.location.host}/ws/base/`
+      );
+
+      socket.onopen = function(event) {
+          console.log("Websocket opened")
+      };
+
+      socket.onmessage = function(event) {
+          console.log('got something');
+          // logging(event)
+      };
+
+      function logging(event){
+          // Get the data from the JSON post
+          console.log("Got new data");
+          let data = JSON.parse(event.data);
+          console.log(data['data']);
+      }
 
       $('.fluid.green.button').on('click', function () {
           // Send the initial command to the Raspberry Pi to start the detection loop

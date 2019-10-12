@@ -6,6 +6,8 @@ from urllib.request import urlopen
 import tensorflow as tf
 import cv2
 import numpy as np
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 from django.shortcuts import render
 from django.views import View
 from rest_framework import status
@@ -109,3 +111,11 @@ def detection_sorting_alert(request, profile_id):
     print("Position: {}".format(position))
     # Return status message with position
     return Response(position, status=status.HTTP_200_OK)
+
+
+def send_logging():
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)('broadcast', {
+        'data': 'test_message',
+        'data2': 'more_test_message'
+    })
