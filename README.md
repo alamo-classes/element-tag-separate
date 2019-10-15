@@ -45,6 +45,8 @@ For an in-depth explanation, please see the following youtube video explaining h
 
 [![Lego Element Sorter](images/video_screenshot.png)(https://youtu.be/cp-qN7oeIuc "Lego Element Sorter")]
 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/cp-qN7oeIuc" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 * Link youtube video
 * Learning for adding parts
 * Mode for Separate (Category, Part Number, Color)
