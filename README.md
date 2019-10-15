@@ -40,16 +40,37 @@ When fed from the bulk feeder, the part will tagged with a confidence interval b
 If the element is recognized with an appropriate confidence interval it will be assigned a position based on the profile mapping.
 The position will correlate to a physical bin where the block will be sorted.
 ---
-# GUI Interface
+# User Interface
 For an in-depth explanation, please see the following youtube video explaining how the web ui interact with the system.
 
 [![Lego Element Sorter](images/video_screenshot.png)](https://youtu.be/cp-qN7oeIuc "Lego Element Sorter")
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/cp-qN7oeIuc" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
-[![Lego Element Sorter Tutorial](http://img.youtube.com/vi/cp-qN7oeIuc/0.jpg)](http://www.youtube.com/watch?v=cp-qN7oeIuc "Lego Element Sorter")
-
-* Link youtube video
-* Learning for adding parts
-* Mode for Separate (Category, Part Number, Color)
-* Advanced Mode for Set Detection
+## User Interface Workflow
+### Settings
+The settings page is responsible for some of the global settings needed by the UI. It is required before the capture 
+process begins and can be updated any time by clicking the "Settings" tab in the menu bar.
+### Blocks
+The blocks application is used to enter a block into the database. The part number (found from collector catalogs) as well
+as physical characteristics are entered into the database. The blocks table will display the entered parts and the number of
+training photos that each block respectively has. 
+### Capture
+TODO: Add an image
+The capture application uses the blocks entered in the Blocks application. To start a capture, select the block that is
+training data should be produced. Load the machine's hopper with multiple copies of the part. Click the run button to start
+the capture process. To end the capture click the red button.
+### Training
+Once enough training data is captured for multiple blocks, the UI will allow you to train a new neural network. Select 
+eligible blocks that you would like to use in the network and submit the form. A background thread is started to train the new
+network. Once the network is finished, the table will display the finished status.
+### Profiles
+Profiles are used to map the labels found in a network to physical bin locations. There are six assignable bins as well 
+as a seventh bin used for sorting un-sortable pieces. 
+### Sorting
+TODO: Add an image
+Select a defined profile and click the green run button. Parts will be sorted into their respective bins.
+### Catalog
+TODO
+### Admin
+There is a "hidden" administrative panel which allows developers to directly interact with the database. This can be useful when
+debugging certain applications; however, caution is advised when using this page. Incorrectly interacting with the database
+can cause system instability.
