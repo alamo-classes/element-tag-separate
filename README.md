@@ -43,9 +43,8 @@ The position will correlate to a physical bin where the block will be sorted.
 # GUI Interface
 For an in-depth explanation, please see the following youtube video explaining how the web ui interact with the system.
 
-<a href="http://www.youtube.com/watch?feature=player_embedded&v=cp-qN7oeIuc
-" target="_blank"><img src="http://img.youtube.com/vi/cp-qN7oeIuc/0.jpg" 
-alt="IMAGE ALT TEXT HERE" width="240" height="180" border="10" /></a>
+[![Lego Element Sorter](images/video_screenshot.png)(https://youtu.be/cp-qN7oeIuc "Lego Element Sorter")]
+
 * Link youtube video
 * Learning for adding parts
 * Mode for Separate (Category, Part Number, Color)
