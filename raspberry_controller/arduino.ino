@@ -84,8 +84,8 @@ void setup() {
     hopper_servo.write(90);
 
     // Start absolute servo
-    sorter_servo.attach(SERVO_PIN);
     pinMode(SERVO_FEEDBACK_PIN, INPUT);
+    sorter_servo.attach(SERVO_PIN);
 
     // Start IR Detector
     pinMode(SENSORPIN, INPUT);
@@ -126,31 +126,31 @@ void loop() {
                 move_camera_belt();
                 break;
             case '1': // Move block to bin #1
-                sorter_servo_angle = 0;
+                sorter_servo_angle = 350;
                 // While errorAngle is out of range move the servo
                 break;
             case '2': // Move block to bin #1
-                sorter_servo_angle = 345;
+                sorter_servo_angle = 315;
                 // While errorAngle is out of range move the servo
                 break;
             case '3': // Move block to bin #1
-                sorter_servo_angle = 305;
+                sorter_servo_angle = 285;
                 // While errorAngle is out of range move the servo
                 break;
             case '4': // Move block to bin #1
-                sorter_servo_angle = 280;
+                sorter_servo_angle = 255;
                 // While errorAngle is out of range move the servo
                 break;
             case '5': // Move block to bin #1
-                sorter_servo_angle = 240;
+                sorter_servo_angle = 220;
                 // While errorAngle is out of range move the servo
                 break;
             case '6': // Move block to bin #1
-                sorter_servo_angle = 190;
+                sorter_servo_angle = 180;
                 // While errorAngle is out of range move the servo
                 break;
             case '7': // Move block to bin #1
-                sorter_servo_angle = 60;
+                sorter_servo_angle = 40;
                 // While errorAngle is out of range move the servo
                 break;
             default:
