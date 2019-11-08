@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'training',
     'blocks',
     'profiles',
-    'catalog',
     'rest_framework',
     'channels',
     'settings',

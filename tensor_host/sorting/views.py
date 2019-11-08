@@ -40,7 +40,7 @@ def detection_sorting_alert(request, profile_id):
     makedirs(path.join(network_dir, 'testing'), exist_ok=True)
     test_file = path.join(network_dir, "testing/{}.jpg".format(str(int(time()))))
 
-    snapshot_request = urlopen("http://{}:5001/stream.mjpg".format(settings.rpi_id_addr))
+    snapshot_request = urlopen("http://{}:5001/stream.mjpg".format(settings.rpi_id_addr1))
     frame = snapshot_request.read(100000)
 
     a = frame.find(b"\xff\xd8")
@@ -71,8 +71,9 @@ def detection_sorting_alert(request, profile_id):
 
         # Sort to show labels of first prediction in order of confidence
         top_k = predictions[0].argsort()[-len(predictions[0]):][::-1]
-        records = []
-        row_dict = {}
+        # TODO: Clean this up after verification
+        # records = []
+        # row_dict = {}
         # head, tail = path.split(file)
         # row_dict['id'] = tail.split('.')[0]
         header_scores = dict()

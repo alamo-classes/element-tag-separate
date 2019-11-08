@@ -22,7 +22,6 @@ class Capture(View):
         settings = ElementSettings.objects.first()
         if not settings:
             return HttpResponseRedirect("/settings/")
-        print(settings.rpi_id_addr)
         return render(request, 'capture/capture.html', {'blocks': blocks, 'settings': settings})
 
 
@@ -55,7 +54,7 @@ class CaptureLabeledImages:
         block.photo_count = block.photo_count + 1
 
         # Take snapshot and save to a file
-        snapshot_request = request.urlopen("http://{}:5001/stream.mjpg".format(settings.rpi_id_addr))
+        snapshot_request = request.urlopen("http://{}:5001/stream.mjpg".format(settings.rpi_id_addr1))
         frame = snapshot_request.read(100000)
 
         # JPEG data if found between these two byte indexes

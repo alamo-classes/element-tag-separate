@@ -20,12 +20,23 @@
 
 {% block body %}
   <div class="ten wide stretched column">
-    <center class="ui top attached inverted segment">
-      <img src="http://{{ settings.rpi_id_addr }}:5001/stream.mjpg" width="1150" height="620"
+    <div class="ui top attached tabular menu">
+      <div class="item" data-tab="first">Camera #1</div>
+      <div class="item active" data-tab="second">Camera #2</div>
+    </div>
+    <div class="ui bottom attached tab segment" data-tab="first">
+      <center class="ui top attached inverted segment" style="height: 650px">
+      <img src="http://{{ settings.rpi_id_addr1 }}:5001/stream.mjpg" width="1100" height="620"
            alt="Please start camera server(s)">
     </center>
+    </div>
+    <div class="ui bottom attached tab segment active" data-tab="second">
+      <center class="ui top attached inverted segment" style="height: 650px">
+      <img src="http://{{ settings.rpi_id_addr2 }}:5001/stream.mjpg" width="1100" height="620"
+           alt="Please start camera server(s)">
+    </center>
+    </div>
     <div class="ui bottom attached inverted segment">
-      <div class="ui warning message">To start sorting, select a block and click run.</div>
       <form class="ui inverted form">
         <div class="field">
           <label for="profile_dropdown">Profile</label>
@@ -63,7 +74,7 @@
           if (selection_dropdown !== "") {
               $.ajax({
                   type: "GET",
-                  url: "http://{{ settings.rpi_id_addr }}:5000/detection_sorting",
+                  url: "http://{{ settings.rpi_id_addr1 }}:5000/detection_sorting",
                   data: {"profile": selection_dropdown},
                   success: (function (data){
                       console.log(data)
@@ -78,7 +89,7 @@
           // Send command to the Raspberry Pi to stop the detection loop after next cycle
           $.ajax({
               type: "GET",
-              url: "http://{{settings.rpi_id_addr}}:5000/stop_detection",
+              url: "http://{{settings.rpi_id_addr1}}:5000/stop_detection",
               success: (function (data) {
                   console.log(data);
                   //$.active_run = false;
@@ -88,5 +99,7 @@
               })
           });
       });
+
+      $(".menu .item").tab();
   </script>
 {% endblock %}

@@ -12,6 +12,5 @@ urlpatterns = [
     path('training/', include('training.urls')),
     path('profiles/', include('profiles.urls')),
     path('sorting/', include('sorting.urls')),
-    path('catalog/', include('catalog.urls')),
     path('settings/', SettingForm.as_view(), name='settings')
 ]

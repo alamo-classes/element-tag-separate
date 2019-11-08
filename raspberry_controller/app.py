@@ -26,13 +26,15 @@ url_origin = "127.0.0.1"  # Origin of tensor host
 def arduino(url):
     global start_event, sorting, label
     print("Starting thread...", file=sys.stderr)
-
+    app.logger.info("Starting threaded arduino subroutine...")
     arduino_serial = serial.Serial("/dev/ttyACM0", 9600, timeout=5)
+    app.logger.info("Arduino connection started")
     while True:
         if start_event:
             # Begin first stage of detection. Send command to start detection loop to arduino.
             arduino_serial.write(bytes('a', 'UTF-8'))
             print("Starting arduino servos. Entering detection mode...", file=sys.stderr)
+            app.logger.info("Starting arduino servos. Entering detection mode...")
         while start_event:
             # Wait for the IR detection to trigger
             detected = False
@@ -40,6 +42,7 @@ def arduino(url):
                 log = arduino_serial.readline().decode()
                 if "Detected" in log:
                     print("Detection alert triggered", file=sys.stderr)
+                    app.logger.info("Part Detected")
                     detected = True
 
             # Send request for Tensor Flow server to get sorting . Wait for response.
@@ -119,7 +122,9 @@ if not app.debug:
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     origin = input("Please enter the expected host IP address: ")
+    app.logger.info("Target Host set: %s", origin)
     thread = Thread(target=arduino, args=(origin,))
     thread.daemon = True
     thread.start()
+    app.logger.info("Arduino Thread started!")
     app.run(host="0.0.0.0", port=port)
