@@ -110,9 +110,16 @@ void loop() {
                 hopper_servo.write(92);
                 feeder_servo.write(95);
                 // Wait on the block to be detected
-                while (sensorState) {
+                while (sensorState && (Serial.available() == 0)) {
                     sensorState = digitalRead(SENSORPIN);
                 }
+                // If an interrupt was sent by the raspberry pi controller, stop motors and break from routine
+                if (sensorState) {
+                    camera_servo.write(90);
+                    hopper_servo.write(90);
+                    feeder_servo.write(90);
+                    break;
+                } else {
                 // Slow the servos
                 camera_servo.write(95);
                 hopper_servo.write(90);
@@ -122,8 +129,14 @@ void loop() {
                 camera_servo.write(90);
                 Serial.println("Detected, Detected, Detected");
                 break;
+                }
             case 'b': // Move part off of belt
                 move_camera_belt();
+                break;
+            case 'c': // Stop all servos
+                camera_servo.write(90);
+                hopper_servo.write(90);
+                feeder_servo.write(90);
                 break;
             case '1': // Move block to bin #1
                 sorter_servo_angle = 350;

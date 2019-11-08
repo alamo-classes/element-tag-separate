@@ -8,7 +8,7 @@
   <div class="five wide stretched column">
     <div class="ui inverted segment" style="margin-left: 2rem">
       <div class="ui segment">
-        <h3 class="ui header">
+        <h3 class="ui center aligned header">
           Logger
         </h3>
       </div>
@@ -84,8 +84,12 @@
       };
 
       socket.onmessage = function(event) {
-          console.log('got something');
-          logging(event)
+          // If a position is not passed assume it is a message for the capture page.
+          if (JSON.parse(event.data)['position'] === undefined){
+              let message_string = `<b>${Date().split(' ')[4]}</b>: Took new image for part #${event.data}<br>`;
+              console.log(message_string);
+              $("#logging_segment").append(message_string);
+          }
       };
 
       function logging(event){

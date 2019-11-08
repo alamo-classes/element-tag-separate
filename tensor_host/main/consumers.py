@@ -1,3 +1,5 @@
+import json
+
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 
@@ -15,7 +17,10 @@ class CaptureLogging(WebsocketConsumer):
         async_to_sync(self.channel_layer.group_discard)('broadcast', self.channel_name)
         print("Disconnecting")
 
-    def logging_event(self, event):
+    def capture_event(self, event):
         """ Publish group message to client """
-        self.send(text_data=event['data'])
-        print("Event")
+        self.send(text_data=event['label'])
+
+    def sorting_event(self, event):
+        """ Publish to sorting group message client"""
+        self.send(text_data=json.dumps({"label": event['label'], "position": event['position']}))

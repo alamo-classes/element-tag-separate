@@ -3,6 +3,8 @@ from time import time
 from urllib import request
 import numpy as np
 import cv2
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views import View
@@ -64,3 +66,7 @@ class CaptureLabeledImages:
             jpg_bytes = frame[a:b+2]
             image = cv2.imdecode(np.fromstring(jpg_bytes, dtype=np.uint8), cv2.IMREAD_COLOR)
             cv2.imwrite(self.file_path, image)
+
+        # Send websocket broadcast that the image was taken.
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)('broadcast', {'type': 'capture_event', 'label': self.label})

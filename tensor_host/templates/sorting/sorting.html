@@ -8,12 +8,11 @@
   <div class="five wide stretched column">
     <div class="ui inverted segment" style="margin-left: 2rem">
       <div class="ui segment">
-        <h3 class="ui header">
+        <h3 class="ui center aligned header">
           Logger
-          <button class="ui inline right teal button" style="margin-left: 60%">Reset Logger</button>
         </h3>
       </div>
-      <div class="ui segment" style="height: 760px"></div>
+      <div id="logging_segment" class="ui segment" style="height: 760px; overflow-y: scroll"></div>
     </div>
   </div>
 {% endblock %}
@@ -61,23 +60,26 @@
 
 {% block additional_js %}
   <script>
+      // Activate the sorting tab on the menu bar
       $(document).ready(function () {
           $("#monitor_item").addClass("active")
       });
-      $('.ui.embed').embed({autoplay: true});
+
+      // Set Semantic UI elements
+      $(".menu .item").tab();
       $('.ui.dropdown').dropdown();
+
+      // When clicking the Green submit button, tell raspberry pi controller to start detection routine.
       $('.fluid.green.button').on('click', function() {
-          console.log("Clicked");
           // Send the initial command to the Raspberry Pi to start the detection loop
           let selection_dropdown = $(".ui.dropdown").dropdown('get value');
-          console.log(`Val: ${selection_dropdown}`);
           if (selection_dropdown !== "") {
               $.ajax({
                   type: "GET",
                   url: "http://{{ settings.rpi_id_addr1 }}:5000/detection_sorting",
                   data: {"profile": selection_dropdown},
                   success: (function (data){
-                      console.log(data)
+                      console.log("Starting detection process...")
                   }),
                   error: (function (error){
                       console.log(error);
@@ -85,14 +87,15 @@
               })
           }
       });
+
+      // When clicking the Red button, tell raspberry pi controller to stop detection routine.
       $('.fluid.red.button').on('click', function () {
           // Send command to the Raspberry Pi to stop the detection loop after next cycle
           $.ajax({
               type: "GET",
               url: "http://{{settings.rpi_id_addr1}}:5000/stop_detection",
               success: (function (data) {
-                  console.log(data);
-                  //$.active_run = false;
+                  console.log("Stopping detection process...");
               }),
               error: (function (error) {
                   console.log(error);
@@ -100,6 +103,25 @@
           });
       });
 
-      $(".menu .item").tab();
+      // Open websocket
+      let socket = new WebSocket(
+          `ws://${window.location.host}/ws/base/`
+      );
+
+      // Print that the websocket was opened successfully
+      socket.onopen = function(event) {
+          console.log("Websocket opened")
+      };
+
+      // Add detection message to the logger.
+      socket.onmessage = function(event) {
+          // If a position is passed assume it is a message for the sorting page.
+          if (JSON.parse(event.data)['position'] !== undefined)
+          {
+              let message_string = `<b>${Date().split(' ')[4]}</b>: Sorting part #${JSON.parse(event.data)['label']} to position #${JSON.parse(event.data)['position']}<br>`;
+              console.log(message_string);
+              $("#logging_segment").append(message_string);
+          }
+      };
   </script>
 {% endblock %}

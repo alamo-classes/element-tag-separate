@@ -106,14 +106,13 @@ def detection_sorting_alert(request, profile_id):
             position = 6
         else:
             position = 0
-    else:
-        # Set bin to 0 position if threshold is not met
-        position = 0
+    # TODO: Implement confidence threshold
+    # else:
+    #     # Set bin to 0 position if threshold is not met
+    #     position = 0
     print("Position: {}".format(position))
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)('broadcast', {'type': 'sorting_event', 'label': top_score_label,
+                                                          'position': position})
     # Return status message with position
     return Response(position, status=status.HTTP_200_OK)
-
-
-def send_logging(log_message):
-    channel_layer = get_channel_layer()
-    async_to_sync(channel_layer.group_send)('broadcast', {'type': 'logging_event', 'data': log_message})

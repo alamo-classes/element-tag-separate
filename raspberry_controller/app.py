@@ -30,6 +30,9 @@ def arduino(url):
     arduino_serial = serial.Serial("/dev/ttyACM0", 9600, timeout=5)
     app.logger.info("Arduino connection started")
     while True:
+        sleep(5)
+        app.logger.info("start_event currently set to %s", str(start_event))
+        arduino_serial.write(bytes('c', 'UTF-8'))
         if start_event:
             # Begin first stage of detection. Send command to start detection loop to arduino.
             arduino_serial.write(bytes('a', 'UTF-8'))
@@ -40,25 +43,31 @@ def arduino(url):
             detected = False
             while not detected:
                 log = arduino_serial.readline().decode()
+                if not start_event:
+                    print("Stopping detection routine")
+                    app.logger.info("Stopping Detection Routine!")
+                    break
+
                 if "Detected" in log:
                     print("Detection alert triggered", file=sys.stderr)
                     app.logger.info("Part Detected")
                     detected = True
 
             # Send request for Tensor Flow server to get sorting . Wait for response.
-            if sorting:
+            if sorting and detected:
                 position = requests.get(url="http://{}/sorting/detection_sorting/{}/".format(url, label))
                 # Send part through sorter in training position
                 print("Sorting received position #{}".format(position.text), file=sys.stderr)
+                app.logger.info("Sorted part into position #%s", position.text)
                 arduino_serial.write(bytes(position.text, 'UTF-8'))
                 # Sleep 2 seconds and then continue loop
                 sleep(2)
+                app.logger.info("Continuing Detection Routine...")
+                arduino_serial.write(bytes('a', 'UTF-8'))
             # Send request for Tensor Flow to capture an image for processing
-            else:
+            elif detected:
                 requests.get(url="http://{}/capture/detection_training/{}/".format(url, label))
                 print("New photo captured for label: {}".format(label))
-
-            if not start_event:
                 arduino_serial.write(bytes('a', 'UTF-8'))
 
 
@@ -117,11 +126,12 @@ if not app.debug:
     app.logger.setLevel(logging.INFO)
     file_handler.setLevel(logging.INFO)
     app.logger.addHandler(file_handler)
-    app.logger.info('errors')
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
-    origin = input("Please enter the expected host IP address: ")
+    # TODO: Re-enable this after debugging
+    # origin = input("Please enter the expected host IP address: ")
+    origin = "192.168.0.12:8000"
     app.logger.info("Target Host set: %s", origin)
     thread = Thread(target=arduino, args=(origin,))
     thread.daemon = True
