@@ -28,27 +28,36 @@
             </select>
           </div>
           <div class="ui horizontal divider">Distortions</div>
-          <div class="ui three fields">
+          <div class="ui four fields">
             <div class="ui field">
               <label for="invert">Horizontal Flip</label>
-              <select id="invert" name="invert" class="ui dropdown" required>
+              <select id="invert" name="horizontal_flip" class="ui dropdown" required>
                 <option value="1">True</option>
                 <option value="0">False</option>
               </select>
             </div>
             <div class="ui field">
               <label for="scaling">Random Scaling</label>
-              <select id="scaling" name="scaling" class="ui dropdown" required>
-                <option value="1">True</option>
-                <option value="0">False</option>
-              </select>
+              <input id="scaling" name="random_scale" value="0" required>
             </div>
             <div class="ui field">
               <label for="cropping">Random Cropping</label>
-              <select id="cropping" name="cropping" class="ui dropdown" required>
-                <option value="1">True</option>
-                <option value="0">False</option>
-              </select>
+              <input id="cropping" name="random_crop" value="0" required>
+            </div>
+            <div class="ui field">
+              <label for="brightness">Random Brightness</label>
+              <input id="brightness" name="random_brightness" value="0" required>
+            </div>
+          </div>
+          <div class="ui horizontal divider">Hyper Parameters</div>
+          <div class="ui two fields">
+            <div class="ui field">
+              <label for="learning_rate">Learning Rate</label>
+              <input id="learning_rate" name="learning_rate" value="0.01" required>
+            </div>
+            <div class="ui field">
+              <label for="training_steps">Training Steps</label>
+              <input id="training_steps" name="training_steps" value="4000" required>
             </div>
           </div>
           <button class="ui green button" type="submit">Submit <i class="angle double right icon"></i></button>

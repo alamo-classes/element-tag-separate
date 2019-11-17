@@ -32,7 +32,7 @@ unsigned long DUTY_CYCLE_MIN = 29;  // 2.9% * DUTY_SCALE
 unsigned long DUTY_CYCLE_MAX = 971; // 9.71% * DUTY_SCALE
 float UNITS_IN_FULL_CIRCLE = 360;   // Because 360 degrees are in a circle
 int ERROR_ANGLE_OFFSET_US = 23;
-float CONSTANT_KP = 0.9;
+float CONSTANT_KP = .7;
 int MIN_PULSE_SPEED_OFFSET_US = -40;    // Going Counter-clockwise a bit - can be smaller ( < -40)
 int MAX_PULSE_SPEED_OFFSET_US = 40;     // Going Clockwise  a bit - can be bigger (> 40)
 int HOLD_STILL_PULSE_SPEED_US = 1500;   // HOLD_STILL is for keeping the servo in place (no movement, don't change)
@@ -79,7 +79,7 @@ void setup() {
     feeder_servo.attach(FEEDER_SERVO);
     hopper_servo.attach(HOPPER_SERVO);
 
-    camera_servo.write(90);
+    camera_servo.write(91);
     feeder_servo.write(90);
     hopper_servo.write(90);
 
@@ -107,8 +107,8 @@ void loop() {
                 sensorState = 1;
                 // Start the motors
                 camera_servo.write(100);
-                hopper_servo.write(92);
-                feeder_servo.write(95);
+                hopper_servo.write(91);
+                feeder_servo.write(100);
                 // Wait on the block to be detected
                 while (sensorState && (Serial.available() == 0)) {
                     sensorState = digitalRead(SENSORPIN);
@@ -121,12 +121,12 @@ void loop() {
                     break;
                 } else {
                 // Slow the servos
-                camera_servo.write(95);
+                camera_servo.write(96);
                 hopper_servo.write(90);
                 feeder_servo.write(90);
                 // Wait till part gets into position, then stop the servo
                 delay(3000);
-                camera_servo.write(90);
+                camera_servo.write(91);
                 Serial.println("Detected, Detected, Detected");
                 break;
                 }

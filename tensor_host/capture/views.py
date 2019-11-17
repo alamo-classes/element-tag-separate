@@ -55,17 +55,19 @@ class CaptureLabeledImages:
         block = BlockCatalog.objects.get(part_number=self.label)
         block.photo_count = block.photo_count + 1
 
-        # Take snapshot and save to a file
-        snapshot_request = request.urlopen("http://{}:5001/stream.mjpg".format(settings.rpi_id_addr1))
-        frame = snapshot_request.read(100000)
+        # For each raspberry pi
+        for cam_addr in [settings.rpi_id_addr1, settings.rpi_id_addr2]:
+            # Take snapshot and save to a file
+            snapshot_request = request.urlopen("http://{}:5001/stream.mjpg".format(cam_addr))
+            frame = snapshot_request.read(100000)
 
-        # JPEG data if found between these two byte indexes
-        a = frame.find(b"\xff\xd8")
-        b = frame.find(b"\xff\xd9")
-        if a != -1 and b != -1:
-            jpg_bytes = frame[a:b+2]
-            image = cv2.imdecode(np.fromstring(jpg_bytes, dtype=np.uint8), cv2.IMREAD_COLOR)
-            cv2.imwrite(self.file_path, image)
+            # JPEG data if found between these two byte indexes
+            a = frame.find(b"\xff\xd8")
+            b = frame.find(b"\xff\xd9")
+            if a != -1 and b != -1:
+                jpg_bytes = frame[a:b+2]
+                image = cv2.imdecode(np.fromstring(jpg_bytes, dtype=np.uint8), cv2.IMREAD_COLOR)
+                cv2.imwrite(self.file_path.replace(".", "_{}.".format(cam_addr[-1])), image)
 
         # Send websocket broadcast that the image was taken.
         channel_layer = get_channel_layer()

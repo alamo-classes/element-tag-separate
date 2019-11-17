@@ -1,7 +1,6 @@
 from os import mkdir, getcwd, path
 import subprocess
 from shutil import copytree
-from time import sleep
 
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
@@ -65,17 +64,20 @@ def train_network(network):
         copytree(block_src, path.join(network_dataset_dir, str(block.part_number)))
 
     mkdir(path.join(network_dir, "trained_model"))
-    # mkdir(path.join(network_dir, "summaries"))
     image_dir = "dataset/"
     bottleneck_dir = "bottleneck/"
-    training_steps = 500
+    # training_steps = 500
     output_graph = "trained_model/retrained_graph.pb"
     output_labels = "trained_model/retrained_labels.txt"
     exe_path = path.join(getcwd(), "venv/bin/python")
     py_path = path.join(getcwd(), "training/train.py")
+
     command = [exe_path, py_path, "--image_dir={}".format(image_dir), "--bottleneck_dir={}".format(bottleneck_dir),
-               "--how_many_training_steps={}".format(str(training_steps)), "--output_graph={}".format(output_graph),
-               "--output_labels={}".format(output_labels), "--summaries_dir=summaries"]
+               "--how_many_training_steps={}".format(str(network.training_steps)), "--learning_rate={}".format(network.learning_rate),
+               "--output_graph={}".format(output_graph), "--output_labels={}".format(output_labels),"--summaries_dir=summaries",
+               "--flip_left_right", str(network.horizontal_flip), "--random_brightness", str(network.random_brightness),
+               "--random_crop", str(network.random_crop), "--random_scale", str(network.random_scale)]
+    print(command)
     with open(path.join(network_dir, "training_log.txt"), "w") as out, \
             open(path.join(network_dir, "error_log.txt"), "w") as err:
         subprocess.Popen(command, cwd=network_dir, stdout=out, stderr=err)
