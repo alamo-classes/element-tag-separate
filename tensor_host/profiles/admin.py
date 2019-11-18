@@ -1,3 +1,5 @@
+""" Add the Profile's model to the admin section """
 from django.contrib import admin
+from profiles.models import ProfileCatalog
 
-# Register your models here.
+admin.site.register(ProfileCatalog)

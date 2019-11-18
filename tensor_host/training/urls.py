@@ -1,3 +1,4 @@
+""" URL Resolution for training application """
 from django.urls import path
 
 from training.views import Train, TrainingForm

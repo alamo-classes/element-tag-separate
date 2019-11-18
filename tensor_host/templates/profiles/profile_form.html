@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  Element Sorter - Profile
+{% endblock %}
+
+{% block full_content %}
+  <div class="ui three wide column"></div>
+  <div class="ui ten wide column">
+    <div class="ui horizontal divider" style="font-size: large">Create/Edit Profile Form</div>
+    <form class="ui form" method="post" action="{{ action }}">
+      {% csrf_token %}
+      <div class="field">
+        <label for="id_name">Name</label>
+        <input type="text" id="id_name" name="name" maxlength="128" required="">
+      </div>
+      <div class="field">
+        <label for="id_desc">Description</label>
+        <input type="text" id="id_desc" name="description" maxlength="128" required="">
+      </div>
+      <div class="field">
+        <label for="id_blocks_1">Blocks Sorted to Bin #1</label>
+        <select class="ui search dropdown" id="id_blocks_1" multiple="" name="bin_1">
+          <option value="">Select Blocks</option>
+          {% for block in network.blocks.all %}
+            <option value="{{ block.part_number }}">{{ block.part_number }}: {{ block.color_wording }}
+              | {{ block.category }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="field">
+        <label for="id_blocks_2">Blocks Sorted to Bin #2</label>
+        <select class="ui search dropdown" id="id_blocks_2" multiple="" name="bin_2">
+          <option value="">Select Blocks</option>
+          {% for block in network.blocks.all %}
+            <option value="{{ block.part_number }}">{{ block.part_number }}: {{ block.color_wording }}
+              | {{ block.category }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="field">
+        <label for="id_blocks_3">Blocks Sorted to Bin #3</label>
+        <select class="ui search dropdown" id="id_blocks_3" multiple="" name="bin_3">
+          <option value="">Select Blocks</option>
+          {% for block in network.blocks.all %}
+            <option value="{{ block.part_number }}">{{ block.part_number }}: {{ block.color_wording }}
+              | {{ block.category }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="field">
+        <label for="id_blocks_4">Blocks Sorted to Bin #4</label>
+        <select class="ui search dropdown" id="id_blocks_4" multiple="" name="bin_4">
+          <option value="">Select Blocks</option>
+          {% for block in network.blocks.all %}
+            <option value="{{ block.part_number }}">{{ block.part_number }}: {{ block.color_wording }}
+              | {{ block.category }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="field">
+        <label for="id_blocks_5">Blocks Sorted to Bin #5</label>
+        <select class="ui search dropdown" id="id_blocks_5" multiple="" name="bin_5">
+          <option value="">Select Blocks</option>
+          {% for block in network.blocks.all %}
+            <option value="{{ block.part_number }}">{{ block.part_number }}: {{ block.color_wording }}
+              | {{ block.category }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="field">
+        <label for="id_blocks_6">Blocks Sorted to Bin #6</label>
+        <select class="ui search dropdown" id="id_blocks_6" multiple="" name="bin_6">
+          <option value="">Select Blocks</option>
+          {% for block in network.blocks.all %}
+            <option value="{{ block.part_number }}">{{ block.part_number }}: {{ block.color_wording }}
+              | {{ block.category }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <button class="ui green button" type="submit">Submit <i class="angle double right icon"></i></button>
+    </form>
+  </div>
+{% endblock %}
+
+{% block additional_js %}
+  <script>
+      $(".ui.dropdown").dropdown();
+  </script>
+{% endblock %}

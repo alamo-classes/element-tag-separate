@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  Element Sorter - Profile
+{% endblock %}
+
+{% block additional_css %}
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+{% endblock %}
+
+{% block sidebar %}
+  <div class="four wide column" style="margin-left: 2rem">
+    <div class="ui menu">
+      {% if networks %}
+      <div class="ui menu item" onclick="$('.ui.modal').modal('show')" style="cursor: pointer">
+                <a style="font-size:large">Create New Profile <i class="plus icon"></i> </a>
+      </div>
+      {% else %}
+        <div class="ui menu item" style="color: gray; font-size: large">
+          A trained network is needed to construct a new profile
+        </div>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}
+
+{% block body %}
+  <div class="ten wide stretched column">
+    {% if profiles %}
+      <div class="ui segment">
+      <table id="profile_table" class="display" style="width:100%;" role="grid">
+      <thead>
+      <tr role="row">
+        <th class="sorting_asc" tabindex="0" rowspan="1" colspan="1" style="width: 152px">Profile Name</th>
+        <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 236px;">Tags</th>
+        <th class="sorting_asc" tabindex="0" rowspan="1" colspan="1" style="width: 113px">Blocks</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for profile in profiles %}
+        <tr role="row">
+          <td class="sorting_1" tabindex="0" style="text-align: center">{{ profile.name }}</td>
+          <td style="text-align: center">{{ profile.description }}</td>
+          <td style="text-align: center">{{ profile.network }}</td>
+        </tr>
+      {% endfor %}
+    {% else %}
+      <div class="ui warning message">No profiles are currently in the database. To create new profiles use the link in
+        the left sidebar.
+      </div>
+    {% endif %}
+    </tbody>
+    </table>
+    </div>
+  </div>
+  <div class="ui fullscreen modal">
+    <div class="ui segment" style="margin: 2rem">
+      <div class="ui horizontal divider">Select a network</div>
+      <table id="id_network_table" class="display">
+        <thead>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Number of Unique Blocks</th>
+        </tr>
+        </thead>
+        <tbody>
+          {% for network in networks %}
+            <tr onclick="location.href='{% url 'profile_create' network.id %}'" style="cursor: pointer">
+              <td>{{ network.name }}</td>
+              <td>{{ network.description }}</td>
+              <td>{{ network.blocks.all.count }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}
+
+{% block additional_js %}
+  <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+  <script>
+      $(document).ready(function () {
+          $('#profile_table').DataTable();
+          $("#profile_item").addClass("active");
+      });
+      $("#id_network_table").DataTable();
+      $(".ui.modal").modal();
+  </script>
+{% endblock %}

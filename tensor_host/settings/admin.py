@@ -1,3 +1,5 @@
+""" Add the Settings's model to the admin section """
 from django.contrib import admin
+from settings.models import ElementSettings
 
-# Register your models here.
+admin.site.register(ElementSettings)

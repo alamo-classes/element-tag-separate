@@ -1,0 +1,14 @@
+[Unit]
+Description=Python Camera Video Server
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=root
+ExecStart=/home/pi/raspberry_controller/venv/bin/python /home/pi/raspberry_controller/video_stream.py
+
+[Install]
+WantedBy=multi-user.target

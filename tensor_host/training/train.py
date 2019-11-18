@@ -208,6 +208,7 @@ def create_image_lists(image_dir, testing_percentage, validation_percentage):
         }
     return result
 
+
 def get_image_path(image_lists, label_name, index, image_dir, category):
     """"Returns a path to an image for a label at the given index.
 
@@ -240,6 +241,7 @@ def get_image_path(image_lists, label_name, index, image_dir, category):
     full_path = os.path.join(image_dir, sub_dir, base_name)
     return full_path
 
+
 def get_bottleneck_path(image_lists, label_name, index, bottleneck_dir,
                         category, architecture):
     """"Returns a path to a bottleneck file for a label at the given index.
@@ -259,6 +261,7 @@ def get_bottleneck_path(image_lists, label_name, index, bottleneck_dir,
     """
     return get_image_path(image_lists, label_name, index, bottleneck_dir,
                           category) + '_' + architecture + '.txt'
+
 
 def create_model_graph(model_info):
     """"Creates a graph from saved GraphDef file and returns a Graph object.
@@ -284,6 +287,7 @@ def create_model_graph(model_info):
                 ]))
     return graph, bottleneck_tensor, resized_input_tensor
 
+
 def run_bottleneck_on_image(sess, image_data, image_data_tensor,
                             decoded_image_tensor, resized_input_tensor,
                             bottleneck_tensor):
@@ -308,6 +312,7 @@ def run_bottleneck_on_image(sess, image_data, image_data_tensor,
                                  {resized_input_tensor: resized_input_values})
     bottleneck_values = np.squeeze(bottleneck_values)
     return bottleneck_values
+
 
 def maybe_download_and_extract(data_url):
     """Download and extract model tar file.
@@ -337,6 +342,7 @@ def maybe_download_and_extract(data_url):
                         'bytes.')
     tarfile.open(filepath, 'r:gz').extractall(dest_directory)
 
+
 def ensure_dir_exists(dir_name):
     """Makes sure the folder exists on disk.
 
@@ -346,7 +352,9 @@ def ensure_dir_exists(dir_name):
     if not os.path.exists(dir_name):
         os.makedirs(dir_name)
 
+
 bottleneck_path_2_bottleneck_values = {}
+
 
 def create_bottleneck_file(bottleneck_path, image_lists, label_name, index,
                            image_dir, category, sess, jpeg_data_tensor,
@@ -369,6 +377,7 @@ def create_bottleneck_file(bottleneck_path, image_lists, label_name, index,
     bottleneck_string = ','.join(str(x) for x in bottleneck_values)
     with open(bottleneck_path, 'w') as bottleneck_file:
         bottleneck_file.write(bottleneck_string)
+
 
 def get_or_create_bottleneck(sess, image_lists, label_name, index, image_dir,
                              category, bottleneck_dir, jpeg_data_tensor,
@@ -430,6 +439,7 @@ def get_or_create_bottleneck(sess, image_lists, label_name, index, image_dir,
         bottleneck_values = [float(x) for x in bottleneck_string.split(',')]
     return bottleneck_values
 
+
 def cache_bottlenecks(sess, image_lists, image_dir, bottleneck_dir,
                       jpeg_data_tensor, decoded_image_tensor,
                       resized_input_tensor, bottleneck_tensor, architecture):
@@ -472,6 +482,7 @@ def cache_bottlenecks(sess, image_lists, image_dir, bottleneck_dir,
                 if how_many_bottlenecks % 100 == 0:
                     tf.logging.info(
                         str(how_many_bottlenecks) + ' bottleneck files created.')
+
 
 def get_random_cached_bottlenecks(sess, image_lists, how_many, category,
                                   bottleneck_dir, image_dir, jpeg_data_tensor,
@@ -542,6 +553,7 @@ def get_random_cached_bottlenecks(sess, image_lists, how_many, category,
                 filenames.append(image_name)
     return bottlenecks, ground_truths, filenames
 
+
 def get_random_distorted_bottlenecks(
         sess, image_lists, how_many, category, image_dir, input_jpeg_tensor,
         distorted_image, resized_input_tensor, bottleneck_tensor):
@@ -595,6 +607,7 @@ def get_random_distorted_bottlenecks(
         ground_truths.append(ground_truth)
     return bottlenecks, ground_truths
 
+
 def should_distort_images(flip_left_right, random_crop, random_scale,
                           random_brightness):
     """Whether any distortions are enabled, from the input flags.
@@ -611,6 +624,7 @@ def should_distort_images(flip_left_right, random_crop, random_scale,
     """
     return (flip_left_right or (random_crop != 0) or (random_scale != 0) or
             (random_brightness != 0))
+
 
 def add_input_distortions(flip_left_right, random_crop, random_scale,
                           random_brightness, input_width, input_height,
@@ -707,6 +721,7 @@ def add_input_distortions(flip_left_right, random_crop, random_scale,
     distort_result = tf.expand_dims(mul_image, 0, name='DistortResult')
     return jpeg_data, distort_result
 
+
 def variable_summaries(var):
     """Attach a lot of summaries to a Tensor (for TensorBoard visualization)."""
     with tf.name_scope('summaries'):
@@ -718,6 +733,7 @@ def variable_summaries(var):
         tf.summary.scalar('max', tf.reduce_max(var))
         tf.summary.scalar('min', tf.reduce_min(var))
         tf.summary.histogram('histogram', var)
+
 
 def add_final_training_ops(class_count, final_tensor_name, bottleneck_tensor,
                            bottleneck_tensor_size):
@@ -786,6 +802,7 @@ def add_final_training_ops(class_count, final_tensor_name, bottleneck_tensor,
     return (train_step, cross_entropy_mean, bottleneck_input, ground_truth_input,
             final_tensor)
 
+
 def add_evaluation_step(result_tensor, ground_truth_tensor):
     """Inserts the operations we need to evaluate the accuracy of our results.
 
@@ -807,12 +824,14 @@ def add_evaluation_step(result_tensor, ground_truth_tensor):
     tf.summary.scalar('accuracy', evaluation_step)
     return evaluation_step, prediction
 
+
 def save_graph_to_file(sess, graph, graph_file_name):
     output_graph_def = graph_util.convert_variables_to_constants(
         sess, graph.as_graph_def(), [FLAGS.final_tensor_name])
     with gfile.FastGFile(graph_file_name, 'wb') as f:
         f.write(output_graph_def.SerializeToString())
     return
+
 
 def prepare_file_system():
     # Setup the directory we'll write summaries to for TensorBoard
@@ -822,6 +841,7 @@ def prepare_file_system():
     if FLAGS.intermediate_store_frequency > 0:
         ensure_dir_exists(FLAGS.intermediate_output_graphs_dir)
     return
+
 
 def create_model_info(architecture):
     """Given the name of a model architecture, returns information about it.
@@ -918,6 +938,7 @@ def create_model_info(architecture):
         'input_std': input_std,
     }
 
+
 def add_jpeg_decoding(input_width, input_height, input_depth, input_mean,
                       input_std):
     """Adds operations that perform JPEG decoding and resizing to the graph..
@@ -944,6 +965,7 @@ def add_jpeg_decoding(input_width, input_height, input_depth, input_mean,
     offset_image = tf.subtract(resized_image, input_mean)
     mul_image = tf.multiply(offset_image, 1.0 / input_std)
     return jpeg_data, mul_image
+
 
 def main(_):
     # Needed to make sure the logging output is visible.
@@ -1304,4 +1326,8 @@ if __name__ == '__main__':
       for more information on Mobilenet.\
       """)
     FLAGS, unparsed = parser.parse_known_args()
+    sys.stdout.write("\nFlags:")
+    sys.stdout.write(FLAGS.__str__())
+    sys.stdout.write("\nUnparsed:")
+    sys.stdout.write(unparsed.__str__())
     tf.app.run(main=main, argv=[sys.argv[0]] + unparsed)

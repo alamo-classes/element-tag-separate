@@ -25,7 +25,7 @@ SECRET_KEY = '$t_v)erf@p)p5)r%0rg7e8=$59-7^(w4*9y4@dfbhj)6x)6t4='
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.0.12', '127.0.0.1']
 
 
 # Application definition
@@ -41,8 +41,8 @@ INSTALLED_APPS = [
     'training',
     'blocks',
     'profiles',
-    'catalog',
     'rest_framework',
+    'channels',
     'settings',
 ]
 
@@ -125,3 +125,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+ASGI_APPLICATION = "main.routing.APPLICATION"
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('127.0.0.1', 6379)]
+        }
+    }
+}

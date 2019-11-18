@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-  Element Sorter - Capture
+  Element Sorter - Monitor
 {% endblock %}
 
 {% block sidebar %}
@@ -12,7 +12,7 @@
           Logger
         </h3>
       </div>
-      <div id="logging_segment" class="ui segment" style="height: 770px; overflow-y: scroll"></div>
+      <div id="logging_segment" class="ui segment" style="height: 760px; overflow-y: scroll"></div>
     </div>
   </div>
 {% endblock %}
@@ -38,92 +38,64 @@
     <div class="ui bottom attached inverted segment">
       <form class="ui inverted form">
         <div class="field">
-          <label for="block_dropdown">Block</label>
-          <select id="block_dropdown" class="ui fluid dropdown">
-            <option value="">Select an Block</option>
-            {% for block in blocks %}
-              <option value="{{ block.part_number }}">#{{ block.part_number }} [{{ block.color_wording }}]
-                -- {{ block.description }}</option>
+          <label for="profile_dropdown">Profile</label>
+          <select id="profile_dropdown" class="ui fluid dropdown">
+            <option value="">Select a Profile</option>
+            {% for profile in profiles %}
+              <option value="{{ profile.id }}">{{ profile.name }}</option>
             {% endfor %}
           </select>
         </div>
         <div class="ui two buttons">
-          <button class="ui three wide fluid green button" type="button">Run</button>
+          <button class="ui three wide fluid green button" type="button"
+                  onclick="$('.warning').css('pointer-events', 'auto').click()">Run
+          </button>
           <button class="ui three wide fluid red button" type="button">Stop</button>
         </div>
       </form>
     </div>
   </div>
+  </div>
 {% endblock %}
 
 {% block additional_js %}
   <script>
+      // Activate the sorting tab on the menu bar
       $(document).ready(function () {
-          $("#capture_item").addClass("active")
+          $("#monitor_item").addClass("active")
       });
-      $(".ui.embed").embed();
-      $(".ui.dropdown").dropdown();
-      let active_run = false;
 
-      function image_poll() {
-          $.ajax({
-              type: "GET",
-              url: `${document.location.origin}/image_poll`,
-              success: function (data) {
-                  console.log(data);
-              }
-          });
-      }
+      // Set Semantic UI elements
+      $(".menu .item").tab();
+      $('.ui.dropdown').dropdown();
 
-      let socket = new WebSocket(
-          `ws://${window.location.host}/ws/base/`
-      );
-
-      socket.onopen = function(event) {
-          console.log("Websocket opened")
-      };
-
-      socket.onmessage = function(event) {
-          // If a position is not passed assume it is a message for the capture page.
-          if (JSON.parse(event.data)['position'] === undefined){
-              let message_string = `<b>${Date().split(' ')[4]}</b>: Took new image for part #${event.data}<br>`;
-              console.log(message_string);
-              $("#logging_segment").append(message_string);
-          }
-      };
-
-      function logging(event){
-          // Get the data from the JSON post
-          let data = `${Date().split(' ')[4]}: ${event.data}<br>`;
-          $("#logging_segment").append(data);
-      }
-
-      $('.fluid.green.button').on('click', function () {
+      // When clicking the Green submit button, tell raspberry pi controller to start detection routine.
+      $('.fluid.green.button').on('click', function() {
           // Send the initial command to the Raspberry Pi to start the detection loop
-          let selection_dropdown = $(".ui.fluid.dropdown").dropdown('get value');
+          let selection_dropdown = $(".ui.dropdown").dropdown('get value');
           if (selection_dropdown !== "") {
               $.ajax({
                   type: "GET",
-                  url: "http://{{settings.rpi_id_addr1}}:5000/detection_training",
-                  data: {"label":selection_dropdown},
-                  success: (function (data) {
-                      console.log(data)
+                  url: "http://{{ settings.rpi_id_addr1 }}:5000/detection_sorting",
+                  data: {"profile": selection_dropdown},
+                  success: (function (data){
+                      console.log("Starting detection process...")
                   }),
-                  error: (function (error) {
+                  error: (function (error){
                       console.log(error);
                   })
               })
           }
       });
 
+      // When clicking the Red button, tell raspberry pi controller to stop detection routine.
       $('.fluid.red.button').on('click', function () {
           // Send command to the Raspberry Pi to stop the detection loop after next cycle
           $.ajax({
               type: "GET",
               url: "http://{{settings.rpi_id_addr1}}:5000/stop_detection",
               success: (function (data) {
-                  console.log(data);
-                  //$.active_run = false;
+                  console.log("Stopping detection process...");
               }),
               error: (function (error) {
                   console.log(error);
@@ -131,6 +103,25 @@
           });
       });
 
-      $(".menu .item").tab();
+      // Open websocket
+      let socket = new WebSocket(
+          `ws://${window.location.host}/ws/base/`
+      );
+
+      // Print that the websocket was opened successfully
+      socket.onopen = function(event) {
+          console.log("Websocket opened")
+      };
+
+      // Add detection message to the logger.
+      socket.onmessage = function(event) {
+          // If a position is passed assume it is a message for the sorting page.
+          if (JSON.parse(event.data)['position'] !== undefined)
+          {
+              let message_string = `<b>${Date().split(' ')[4]}</b>: Sorting part #${JSON.parse(event.data)['label']} to position #${JSON.parse(event.data)['position']}<br>`;
+              console.log(message_string);
+              $("#logging_segment").append(message_string);
+          }
+      };
   </script>
 {% endblock %}

@@ -32,14 +32,13 @@ unsigned long DUTY_CYCLE_MIN = 29;  // 2.9% * DUTY_SCALE
 unsigned long DUTY_CYCLE_MAX = 971; // 9.71% * DUTY_SCALE
 float UNITS_IN_FULL_CIRCLE = 360;   // Because 360 degrees are in a circle
 int ERROR_ANGLE_OFFSET_US = 23;
-float CONSTANT_KP = 0.9;
+float CONSTANT_KP = .7;
 int MIN_PULSE_SPEED_OFFSET_US = -40;    // Going Counter-clockwise a bit - can be smaller ( < -40)
 int MAX_PULSE_SPEED_OFFSET_US = 40;     // Going Clockwise  a bit - can be bigger (> 40)
 int HOLD_STILL_PULSE_SPEED_US = 1500;   // HOLD_STILL is for keeping the servo in place (no movement, don't change)
 int ANGLE_Q2_MIN = 90;
 int ANGLE_Q3_MAX = 270;
-char sorter_servo_pos = "1";
-int sorter_servo_angle = 180;
+int sorter_servo_angle = 355;
 int currentAngle = 0;                   // The angle the servo is at
 int prevAngle = 0;                      // The last angle the servo had
 int errorAngle = 0;                     // How off we are from the target angle
@@ -80,13 +79,13 @@ void setup() {
     feeder_servo.attach(FEEDER_SERVO);
     hopper_servo.attach(HOPPER_SERVO);
 
-    camera_servo.write(90);
+    camera_servo.write(91);
     feeder_servo.write(90);
     hopper_servo.write(90);
 
     // Start absolute servo
-    sorter_servo.attach(SERVO_PIN);
     pinMode(SERVO_FEEDBACK_PIN, INPUT);
+    sorter_servo.attach(SERVO_PIN);
 
     // Start IR Detector
     pinMode(SENSORPIN, INPUT);
@@ -108,31 +107,67 @@ void loop() {
                 sensorState = 1;
                 // Start the motors
                 camera_servo.write(100);
-                hopper_servo.write(92);
+                hopper_servo.write(91);
                 feeder_servo.write(100);
                 // Wait on the block to be detected
-                while (sensorState) {
+                while (sensorState && (Serial.available() == 0)) {
                     sensorState = digitalRead(SENSORPIN);
-                    if (sensorState == 0){
-                        delay(1000);
-                        sensorState = digitalRead(SENSORPIN);
-                    }
                 }
-                // Stop the servos
-                camera_servo.write(90);
+                // If an interrupt was sent by the raspberry pi controller, stop motors and break from routine
+                if (sensorState) {
+                    camera_servo.write(90);
+                    hopper_servo.write(90);
+                    feeder_servo.write(90);
+                    break;
+                } else {
+                // Slow the servos
+                camera_servo.write(96);
                 hopper_servo.write(90);
                 feeder_servo.write(90);
+                // Wait till part gets into position, then stop the servo
+                delay(3000);
+                camera_servo.write(91);
                 Serial.println("Detected, Detected, Detected");
                 break;
+                }
             case 'b': // Move part off of belt
                 move_camera_belt();
                 break;
-            case '1': // Move block to position #1
-                sorter_servo_angle = 0;
+            case 'c': // Stop all servos
+                camera_servo.write(90);
+                hopper_servo.write(90);
+                feeder_servo.write(90);
+                break;
+            case '1': // Move block to bin #1
+                sorter_servo_angle = 350;
+                // While errorAngle is out of range move the servo
+                break;
+            case '2': // Move block to bin #1
+                sorter_servo_angle = 315;
+                // While errorAngle is out of range move the servo
+                break;
+            case '3': // Move block to bin #1
+                sorter_servo_angle = 285;
+                // While errorAngle is out of range move the servo
+                break;
+            case '4': // Move block to bin #1
+                sorter_servo_angle = 255;
+                // While errorAngle is out of range move the servo
+                break;
+            case '5': // Move block to bin #1
+                sorter_servo_angle = 220;
+                // While errorAngle is out of range move the servo
+                break;
+            case '6': // Move block to bin #1
+                sorter_servo_angle = 180;
+                // While errorAngle is out of range move the servo
+                break;
+            case '7': // Move block to bin #1
+                sorter_servo_angle = 40;
                 // While errorAngle is out of range move the servo
                 break;
             default:
-                Serial.println("Unknown command detected");
+                Serial.println("Unknown command");
                 break;
         }
     }
@@ -147,7 +182,6 @@ void feedback_servo(int targetAngle) {
   // Check if our cycle time was appropriate
   if (!(tCycle > 1000 && tCycle < 1200)) {
     // Invalid cycle time, so try pulse measuring again
-    // Serial.println("Invalid cycle time");
     return;
   }
   // Calculate the duty cycle of the pulse
@@ -190,11 +224,6 @@ void feedback_servo(int targetAngle) {
   } else if (errorAngle < 0) {
     offset = -1 * ERROR_ANGLE_OFFSET_US;
   }
-
-//   Serial.print("Current angle: ");
-//   Serial.print(currentAngle);
-//   Serial.print(" / ");
-//   Serial.print(errorAngle);
 
   outputSpeed = HOLD_STILL_PULSE_SPEED_US + outputSpeed + offset;
   sorter_servo.writeMicroseconds(outputSpeed);

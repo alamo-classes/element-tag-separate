@@ -110,3 +110,6 @@ tensor_host/artifacts/
 
 # Django
 migrations/
+
+# Debugging Files
+debugging_tools/
