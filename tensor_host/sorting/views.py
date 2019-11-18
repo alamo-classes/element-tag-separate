@@ -16,7 +16,6 @@ from rest_framework.response import Response
 
 from profiles.models import ProfileCatalog
 from settings.models import ElementSettings
-from training.models import NeuralNets
 
 
 class Sorting(View):
@@ -30,6 +29,7 @@ class Sorting(View):
 
 @api_view(['GET'])
 def detection_sorting_alert(request, profile_id):
+    # TODO: Something in here is causing a memory leak. Might need to explicitly kill Tensorflow.
     # Get network & settings object from the database
     profile = ProfileCatalog.objects.get(id=profile_id)
     network = profile.network
@@ -38,57 +38,61 @@ def detection_sorting_alert(request, profile_id):
     # Create directory to store the snapshot
     network_dir = path.join(getcwd(), "artifacts/networks", network.name)
     makedirs(path.join(network_dir, 'testing'), exist_ok=True)
-    test_file = path.join(network_dir, "testing/{}.jpg".format(str(int(time()))))
 
-    snapshot_request = urlopen("http://{}:5001/stream.mjpg".format(settings.rpi_id_addr1))
-    frame = snapshot_request.read(100000)
+    top_score_dict = dict()
+    for cam_addr in [settings.rpi_id_addr1, settings.rpi_id_addr2]:
+        test_file = path.join(network_dir, "testing/{}_{}.jpg".format(str(int(time())), cam_addr[-1]))
 
-    a = frame.find(b"\xff\xd8")
-    b = frame.find(b"\xff\xd9")
-    if a != -1 and b != -1:
-        jpg_bytes = frame[a:b + 2]
-        image = cv2.imdecode(np.fromstring(jpg_bytes, dtype=np.uint8), cv2.IMREAD_COLOR)
-        cv2.imwrite(test_file, image)
+        snapshot_request = urlopen("http://{}:5001/stream.mjpg".format(settings.rpi_id_addr1))
+        frame = snapshot_request.read(100000)
 
-    # Get headers for the trained network from generated labels tag in list format
-    with open(path.join(network_dir, 'trained_model/retrained_labels.txt')) as labels_file:
-        labels = labels_file.read()
-    labels = labels.split('\n')[:-1]
+        a = frame.find(b"\xff\xd8")
+        b = frame.find(b"\xff\xd9")
+        if a != -1 and b != -1:
+            jpg_bytes = frame[a:b + 2]
+            image = cv2.imdecode(np.fromstring(jpg_bytes, dtype=np.uint8), cv2.IMREAD_COLOR)
+            cv2.imwrite(test_file, image)
 
-    # Open trained network to categorize
-    with tf.gfile.FastGFile(path.join(network_dir, "trained_model/retrained_graph.pb"), 'rb') as tensor_graph:
-        graph_def = tf.GraphDef()
-        graph_def.ParseFromString(tensor_graph.read())
-        _ = tf.import_graph_def(graph_def, name='')
+        # Get headers for the trained network from generated labels tag in list format
+        with open(path.join(network_dir, 'trained_model/retrained_labels.txt')) as labels_file:
+            labels = labels_file.read()
+        labels = labels.split('\n')[:-1]
 
-    # Run trained network to identify
-    with tf.Session() as sess:
-        # Read image data
-        image_data = tf.gfile.FastGFile(test_file, 'rb').read()
-        # Feed the image data as input to the graph and get first prediction
-        softmax_tensor = sess.graph.get_tensor_by_name('final_result:0')
-        predictions = sess.run(softmax_tensor, {'DecodeJpeg/contents:0': image_data})
+        # Open trained network to categorize
+        with tf.gfile.FastGFile(path.join(network_dir, "trained_model/retrained_graph.pb"), 'rb') as tensor_graph:
+            graph_def = tf.GraphDef()
+            graph_def.ParseFromString(tensor_graph.read())
+            _ = tf.import_graph_def(graph_def, name='')
 
-        # Sort to show labels of first prediction in order of confidence
-        top_k = predictions[0].argsort()[-len(predictions[0]):][::-1]
-        # TODO: Clean this up after verification
-        # records = []
-        # row_dict = {}
-        # head, tail = path.split(file)
-        # row_dict['id'] = tail.split('.')[0]
-        header_scores = dict()
-        for node_id in top_k:
-            header = labels[node_id]
-            score = predictions[0][node_id]
-            header_scores[header] = score
-        print(header_scores.__str__())
-    tensor_graph.close()
+        # Run trained network to identify
+        with tf.Session() as sess:
+            # Read image data
+            image_data = tf.gfile.FastGFile(test_file, 'rb').read()
+            # Feed the image data as input to the graph and get first prediction
+            softmax_tensor = sess.graph.get_tensor_by_name('final_result:0')
+            predictions = sess.run(softmax_tensor, {'DecodeJpeg/contents:0': image_data})
 
-    # Get label based on top score
-    top_score_label = max(header_scores.items(), key=operator.itemgetter(1))[0]
+            # Sort to show labels of first prediction in order of confidence
+            top_k = predictions[0].argsort()[-len(predictions[0]):][::-1]
+
+            header_scores = dict()
+            for node_id in top_k:
+                header = labels[node_id]
+                score = predictions[0][node_id]
+                header_scores[header] = score
+            print(header_scores.__str__())
+        tensor_graph.close()
+
+        # Get label based on top score and append it to a new dictionary
+        top_score_label = max(header_scores.items(), key=operator.itemgetter(1))[0]
+        top_score_value = header_scores[top_score_label]
+        top_score_dict[top_score_label] = top_score_value
+
+    # In case we have two different labels, find the one with the highest score
+    top_score_label = max(top_score_dict.items(), key=operator.itemgetter(1))[0]
 
     # Get bin position based on label (if score is above percentage threshold)
-    # TODO: Reenable after zoned in the cameras
+    # TODO: Reenable tolerance checks
     # if header_scores[top_score_label] >= settings.tolerance:
     if True:
         # Check each bin number for the part number label
