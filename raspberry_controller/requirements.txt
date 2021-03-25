@@ -13,7 +13,7 @@ numpy==1.17.2
 picamera==1.13
 pkg-resources==0.0.0
 pyserial==3.4
-PyYAML==5.1.2
+PyYAML==5.4
 requests==2.22.0
 six==1.12.0
 urllib3==1.25.6
